@@ -22,9 +22,24 @@ header-includes:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 4, fig.height = 4, fig.pos="H", fig.pos = 'H')
 
-#   Load libraries
-library(gridExtra)
-library(ggplot2)
+#   Housekeeping
+
+    #   Clear objects from environment
+rm(list = ls())
+options(scipen = 999)
+path <- "/Users/janhendrikpretorius/Library/CloudStorage/OneDrive-StellenboschUniversity/01-Masters-2023/02 Financial Econometrics/20713479-FMX-Prac/"
+
+    #   Get external code
+source(paste0(path, "UTILITIES/aesthetics.R")) #  Get plot themes
+
+    #   Load libraries
+source(paste0(path, "UTILITIES/libraries.R")) #   Load libraries
+
+    #   Load Data
+
+file <- "TEST-DATA.xlsx"
+
+df_deaths <- read_xlsx(paste0(path, "DATA/", file))
 
 ```
 

@@ -63,26 +63,18 @@ abstract: |
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 6, fig.height = 5, fig.pos="H", fig.pos = 'H')
 
-#   Housekeeping
-
-    #   Clear objects from environment
+    #   Housekeeping
 rm(list = ls())
 options(scipen = 999)
+path <- "/Users/janhendrikpretorius/Library/CloudStorage/OneDrive-StellenboschUniversity/01-Masters-2023/02 Financial Econometrics/20713479-FMX-Prac/"
 
-    #   Get external code
-#source("UTILITIES/aesthetics.R") #  Get plot themes
-
-    #   Load libraries
-#source("UTILITIES/libraries.R") #   Load libraries
+    #   Get external scripts
+source(paste0(path, "UTILITIES/aesthetics.R")) #  Get plot themes
+source(paste0(path, "UTILITIES/libraries.R")) #   Load libraries
 
     #   Load Data
-#path <- "data/"
-
-#file <- "Deaths_by_cause.csv"
-#df_deaths <- read_csv(paste0(path, file))
-
-#file <- "owid-covid-data.csv"
-#df_covid <- read_csv(paste0(path, file))
+file <- "TEST-DATA.xlsx"
+df_deaths <- read_xlsx(paste0(path, "DATA/", file))
 ```
 
 <!-- ############################## -->
