@@ -52,10 +52,7 @@ Stores all write-ups and documentation for questions.
   - `Presentation-Question-Template`: A folder housing template for presentations.
   
 ### `LICENSE`:
-This project is licensed under the MIT License, which is a highly permissive and flexible open-source license. Key points include:
-  - Freedom to Use: Allows commercial use, modification, distribution, private use, and sublicensing.
-  - Minimal Restrictions: Requires only the inclusion of the original license and copyright notice with any substantial portions of the software.
-  - No Liability: The software is provided "as is", without warranty of any kind.
+This project is licensed under the MIT License, which is a highly permissive and flexible open-source license.
 
 --- 
 
