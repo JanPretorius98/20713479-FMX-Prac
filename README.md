@@ -56,6 +56,6 @@ Links to further documentation, if available.
 
 ---
 
-## Authors
+## Author
 
 - Jan-Hendrik Pretorius, Stellenbosch University
