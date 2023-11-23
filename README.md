@@ -2,10 +2,6 @@
 
 This repository contains the materials for the Financial Econometrics 871 practical test, including datasets, utility scripts for analysis, and documentation templates for questions and presentations.
 
-
-# 20713479-FMX-Prac
-Repository for Financial Econometrics 871 Practical Test.
-
 ---
 
 ## Table of Contents
