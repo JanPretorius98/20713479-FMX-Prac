@@ -61,3 +61,5 @@ Links to further documentation, if available.
 ---
 
 ## Authors
+
+- Jan-Hendrik Pretorius, Stellenbosch University
