@@ -1,0 +1,37 @@
+---
+title: "Financial Analysis of Data"
+subtitle: "An Insightful Presentation"
+author: "Jan-Hendrik Pretorius"
+institute: "Stellenbosch University"
+date: "`r Sys.Date()`"
+output: 
+  beamer_presentation:
+    theme: "metropolis" 
+    colortheme: "default" 
+    fonttheme: "structurebold"
+    slide_level: 2
+    fig_width: 4
+    fig_height: 2
+header-includes:
+   - \usepackage{FiraSans} 
+   - \setbeamertemplate{navigation symbols}{} 
+   - \setbeamertemplate{footline}[frame number]
+   - \setbeamertemplate{caption}[numbered]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 4, fig.height = 4, fig.pos="H", fig.pos = 'H')
+
+#   Load libraries
+library(gridExtra)
+library(ggplot2)
+
+```
+
+## Slide with Points
+
+- Key Point 1
+- Key Point 2
+- Key Point 3
+
+
