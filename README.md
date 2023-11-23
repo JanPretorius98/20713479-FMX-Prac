@@ -23,6 +23,7 @@ The project makes use of the following packages, that can be loaded with the ext
 - stringr
 - tidytext
 - readxl
+- xtable
 
 These libraries are loaded using the pacman package, which offers a more convenient way to load R packages, installing them if necessary. Ensure that pacman is installed on your machine by running the following code in R:
 
