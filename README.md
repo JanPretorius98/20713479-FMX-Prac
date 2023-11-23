@@ -8,7 +8,6 @@ This repository contains the materials for the Financial Econometrics 871 practi
 1. [Installation](#installation)
 2. [Project Organization](#project-organization)
 3. [Question-1](#q1)
-4. [Question-2](#q2)
 5. [Documentation](#documentation)
 6. [Authors](#authors-and-acknowledgment)
 
@@ -71,12 +70,6 @@ This question is stored in `WRITE-UP`->`Question-1`. The following section expla
 
 ### Some pitfalls along the way:
 
-
----
-
-##  Question-2
-
----
 
 ## Documentation
 
