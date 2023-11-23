@@ -7,9 +7,9 @@ This repository contains the materials for the Financial Econometrics 871 practi
 ## Table of Contents
 1. [Installation](#installation)
 2. [Project Organization](#project-organization)
-3. [Question-1](#q1)
+3. [Question-1](#question-1)
 5. [Documentation](#documentation)
-6. [Author](#authors-and-acknowledgment)
+6. [Author](#author)
 
 
 ---
