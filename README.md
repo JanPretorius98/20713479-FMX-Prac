@@ -7,7 +7,7 @@ This repository contains the materials for the Financial Econometrics 871 practi
 ## Table of Contents
 1. [Installation](#installation)
 2. [Project Organization](#project-organization)
-3. [Question-1](#question-1)
+3. [Question 1](#question-1)
 5. [Documentation](#documentation)
 6. [Author](#author)
 
@@ -56,7 +56,7 @@ This project is licensed under the MIT License, which is a highly permissive and
 
 --- 
 
-##  Question-1
+##  Question 1
 
 This question is stored in `WRITE-UP`->`Question-1`. The following section explains step by step how the problem in question 1 was approached.
 
