@@ -3,4 +3,6 @@ pacman::p_load(dplyr,
                tidyverse,
                stringr,
                tidytext,
-               readxl)
+               readxl,
+               xtable)
+

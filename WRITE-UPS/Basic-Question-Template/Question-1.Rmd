@@ -10,18 +10,15 @@ Thesis_FP: FALSE
 
 # --------- Front Page
 
-AddTitle: TRUE #
+AddTitle: TRUE
 Author1: "Jan-Hendrik Pretorius" 
 Ref1: "Stellenbosch University" 
 Email1: "20713479\\@sun.ac.za" 
 
-#keywords: "Multivariate GARCH \\sep Kalman Filter \\sep Copula"
-#JELCodes: "L250 \\sep L100"
-
 # ----- Manage headers and footers:
-BottomRFooter: "\\footnotesize Page \\thepage" # Add a '#' before this line to remove footer.
+BottomRFooter: "\\footnotesize Page \\thepage"
 addtoprule: TRUE
-addfootrule: TRUE               # Use if footers added. Add '#' to remove line.
+addfootrule: TRUE               
 
 # --------- page margins:
 margin: 2.3 # Sides
@@ -46,8 +43,6 @@ linestretch: 1.2
 link-citations: TRUE            
 
 ### Adding additional latex packages:
-# header-includes:
-#    - \usepackage{colortbl} # Add additional packages here.
 
 output:
   pdf_document:
@@ -69,12 +64,12 @@ options(scipen = 999)
 path <- "/Users/janhendrikpretorius/Library/CloudStorage/OneDrive-StellenboschUniversity/01-Masters-2023/02 Financial Econometrics/20713479-FMX-Prac/"
 
     #   Get external scripts
-source(paste0(path, "UTILITIES/aesthetics.R")) #  Get plot themes
 source(paste0(path, "UTILITIES/libraries.R")) #   Load libraries
+source(paste0(path, "UTILITIES/aesthetics.R")) #  Get plot themes
 
     #   Load Data
-file <- "TEST-DATA.xlsx"
-df_deaths <- read_xlsx(paste0(path, "DATA/", file))
+#file <- "TEST-DATA.xlsx"
+#df_deaths <- read_xlsx(paste0(path, "DATA/", file))
 ```
 
 <!-- ############################## -->
@@ -83,4 +78,113 @@ df_deaths <- read_xlsx(paste0(path, "DATA/", file))
 
 <!-- ############################## -->
 
+
+```{r results = 'asis'}
+
+# Set seed for reproducibility
+set.seed(123)
+
+# Generating numerical data
+numerical_1 <- rnorm(100) # 100 random numbers from a normal distribution
+numerical_2 <- rnorm(100)
+
+# Generating categorical data
+categories <- sample(c("A", "B", "C", "D", "E", "F", "G"), 100, replace = TRUE)
+
+# Generating boolean data
+boolean <- sample(c(TRUE, FALSE), 100, replace = TRUE)
+
+# Combining all into a data frame
+hypothetical_data <- data.frame(Numerical_1 = numerical_1, 
+                                Numerical_2 = numerical_2, 
+                                Category = categories, 
+                                Boolean = boolean)
+
+# Viewing the first few rows of the dataset
+
+data <- head(hypothetical_data)
+table <- xtable(data, caption = "Long Table Example")
+  print.xtable(table,
+             tabular.environment = "longtable",
+             floating = FALSE,
+             table.placement = 'H',
+             booktabs = T,
+             include.rownames = FALSE,
+             comment = FALSE,
+             caption.placement = 'top',
+             size="\\fontsize{12pt}{13pt}\\selectfont"
+             )
+
+
+```
+
+```{r}
+
+hypothetical_data %>%
+  ggplot(aes(x = Numerical_1, y = Numerical_2, color = Category)) +
+    geom_point() +
+    scale_color_manual(values = palette) +
+    th +
+    ggtitle("Scatter Plot of Numerical Data")
+
+
+```
+
+```{r}
+
+hypothetical_data %>% 
+  ggplot(aes(x = Category, y = Numerical_1, color = Category)) +
+    geom_boxplot() +
+    scale_color_manual(values = palette) +
+    th +
+    ggtitle("Boxplot Grouped by Category")
+
+
+```
+
+
+```{r}
+
+hypothetical_data %>% 
+  ggplot(aes(x = Category, fill = Boolean)) +
+    geom_bar() +
+    scale_fill_manual(values = palette)+
+    th +
+    ggtitle("Bar Plot of Categories")
+
+```
+
+
+```{r}
+
+hypothetical_data %>% 
+  ggplot(aes(x = Numerical_1, fill = Category)) +
+    geom_histogram(binwidth = 0.5, color = "black") +
+    scale_fill_manual(values = palette) +
+    th +
+    ggtitle("Histogram of Numerical_1")
+
+```
+
+```{r}
+
+hypothetical_data %>% 
+  ggplot(aes(x = Numerical_1, fill = Boolean)) +
+    geom_density(alpha = 0.6) +
+    scale_fill_manual(values = palette) +
+    th +
+    ggtitle("Density Plot of Numerical_1")
+
+```
+
+```{r}
+hypothetical_data %>% 
+  ggplot(aes(x = Numerical_1, y = Numerical_2, color = Category)) +
+    geom_point() +
+    scale_color_manual(values = palette) +
+    facet_wrap(~ Boolean) +
+    th +
+    ggtitle("Scatter Plots Faceted by Category")
+
+```
 

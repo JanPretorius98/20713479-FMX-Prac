@@ -130,6 +130,20 @@
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 
 %%% Include extra packages specified by user
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
 
 %%% Hard setting column skips for reports - this ensures greater consistency and control over the length settings in the document.
 %% page layout
@@ -222,7 +236,33 @@ Insert abstract if necessary.
 
 
 
+\begingroup\fontsize{12pt}{13pt}\selectfont
+\begin{longtable}{rrll}
+\caption{Long Table Example} \\ 
+  \toprule
+Numerical\_1 & Numerical\_2 & Category & Boolean \\ 
+  \midrule
+-0.56 & -0.71 & G & FALSE \\ 
+  -0.23 & 0.26 & G & TRUE \\ 
+  1.56 & -0.25 & C & FALSE \\ 
+  0.07 & -0.35 & A & TRUE \\ 
+  0.13 & -0.95 & E & FALSE \\ 
+  1.72 & -0.05 & G & FALSE \\ 
+   \bottomrule
+\end{longtable}
+\endgroup
 
+\includegraphics{Question-1_files/figure-latex/unnamed-chunk-2-1.pdf}
+
+\includegraphics{Question-1_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\includegraphics{Question-1_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+\includegraphics{Question-1_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\includegraphics{Question-1_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\includegraphics{Question-1_files/figure-latex/unnamed-chunk-7-1.pdf}
 
 \bibliography{Tex/ref}
 
