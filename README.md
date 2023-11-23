@@ -50,11 +50,33 @@ This folder houses external scripts that enhance functionality.
 Stores all write-ups and documentation for questions.
   - `Basic-Question-Template`: A folder housing the template for basic questions.
   - `Presentation-Question-Template`: A folder housing template for presentations.
+  - `Question-1`: Write-up and code for Question 1
   
 ### `LICENSE`:
 This project is licensed under the MIT License, which is a highly permissive and flexible open-source license.
 
 --- 
+
+##  Question 1
+
+This question is stored in `WRITE-UP`->`Question-1`. The following section explains step by step how the problem in question 1 was approached.
+
+### The folllowing questions guide the analysis:
+
+
+
+### Data operations:
+
+
+
+### Some pitfalls along the way:
+
+
+---
+
+##  Question 2
+
+---
 
 ## Documentation
 
