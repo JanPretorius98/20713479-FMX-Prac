@@ -5,6 +5,10 @@ pacman::p_load(dplyr,
                tidytext,
                readxl,
                xtable,
-               PerformanceAnalytics)
-
-pacman::p_install_gh("Nicktz/fmxdat")
+               PerformanceAnalytics,
+               tbl2xts,
+               lubridate,
+               gt,
+               rmsfuns,
+               RiskPortfolios,
+               fitHeavyTail)
