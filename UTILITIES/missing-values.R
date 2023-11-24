@@ -7,7 +7,7 @@ impute_missing_returns <- function(return_mat, impute_returns_method = "NONE"){
   # Make sure we have a date column called date:
   if( !"date" %in% colnames(return_mat) ) stop("No 'date' column provided in return_mat. Try again please.")
   
-  # Note my use of 'any' below...
+  # Note my use of 'any' below
   # Also note that I 'return' return_mat - which stops the function and returns return_mat.
   if( impute_returns_method %in% c("NONE", "None", "none") ) {
     if( any(is.na(return_mat)) ) warning("There are missing values in the return matrix.. Consider maybe using impute_returns_method = 'Drawn_Distribution_Own' / 'Drawn_Distribution_Collective'")
