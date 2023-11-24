@@ -9,7 +9,7 @@ This repository contains the materials for the Financial Econometrics 871 practi
 2. [Project Organization](#project-organization)
 3. [Question 1](#question-1)
 5. [Documentation](#documentation)
-6. [Author](#author)
+6. [Authors](#authors)
 
 
 ---
@@ -77,6 +77,11 @@ Links to further documentation, if available.
 
 ---
 
-## Author
+## Authors
 
 - Jan-Hendrik Pretorius, Stellenbosch University
+  - Project and analysis
+
+- Nico Katzke
+  - `Proportional_Cap_Foo` function
+  - `impute_missing_returns` function
