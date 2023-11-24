@@ -4,5 +4,7 @@ pacman::p_load(dplyr,
                stringr,
                tidytext,
                readxl,
-               xtable)
+               xtable,
+               PerformanceAnalytics)
 
+pacman::p_install_gh("Nicktz/fmxdat")
