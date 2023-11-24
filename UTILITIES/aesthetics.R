@@ -13,6 +13,7 @@ th <- theme(
     plot.background = element_rect(fill = "white", color = "white"),
     panel.grid.major = element_line(color = "#565857", size = 0.1),
     panel.grid.minor = element_line(color = "#565857", size = 0.1),
+    axis.line = element_line(size = 0.3, color = "black"),
 
     # Axis titles and labels
     axis.title.x = element_text(size = 12,family = "Palatino", vjust = 0.5, hjust = 0.5, face = "bold"),
