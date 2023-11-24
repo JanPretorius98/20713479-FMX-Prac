@@ -44,6 +44,8 @@ Contains all data files for the practical.
 This folder houses external scripts that enhance functionality.
   - `aesthetics.R`: Provides a standardised plotting theme.
   - `libraries.R`: Loads all necessary libraries and packages for the project via pacman.
+  - `capping.R`: Provides the `Proportional_Cap_Foo` function
+  - `missing-values.R`: Provides the `impute_missing_returns` function
 
 ### `WRITE-UPS`:
 Stores all write-ups and documentation for questions.
