@@ -1,8 +1,8 @@
 ---
 # Basic template for FMX Prac:
 
-title: "Question 1: Systematic AI Fund"
-subtitle: "Question 1: Systematic AI Fund"
+title: "Question 3: Portfolio Construction"
+subtitle: "Question 3: Portfolio Construction"
 
 documentclass: "elsarticle"
 
@@ -21,9 +21,9 @@ addtoprule: TRUE
 addfootrule: TRUE               
 
 # --------- page margins:
-margin: 2.3 # Sides
-bottom: 2 # bottom
-top: 2.5 # Top
+margin: 2.3 
+bottom: 2 
+top: 2.5 
 HardSet_layout: TRUE
 
 # --------- Line numbers
@@ -48,7 +48,7 @@ output:
   pdf_document:
     keep_tex: TRUE
     template: Tex/TexDefault.txt
-    fig_width: 3.5 # Adjust default figure sizes. This can also be done in the chunks of the text.
+    fig_width: 3.5 
     fig_height: 3.5
 abstract: |
   Insert abstract if necessary.
@@ -68,12 +68,12 @@ source(paste0(path, "UTILITIES/libraries.R")) #   Load libraries
 source(paste0(path, "UTILITIES/aesthetics.R")) #  Get plot themes
 
     #   Load Data
-#file <- "TEST-DATA.xlsx"
-#df_deaths <- read_xlsx(paste0(path, "DATA/", file))
+file <- "ALSI.rds"
+ALSI <- read_rds(paste0(path, "DATA/", file))
 
-ASISA <- read_rds(paste0(path, "DATA/","ASISA Rets.rds"))
-BM <- read_rds(paste0(path, "Capped SWIX.rds"))
-AI_Fund <- read_rds(paste0(path, "AI Max Fund.rds"))
+file <- "Rebalance_days.rds"
+RebDays <- read_rds(paste0(path, "DATA/", file))
+
 ```
 
 <!-- ############################## -->

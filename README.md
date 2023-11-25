@@ -18,9 +18,14 @@ Documentation for questions will follow this general format:
 1. [Installation](#installation)
 2. [Project Organization](#project-organization)
 3. [Question 1](#question-1)
-4. [Utilities Functions](#utilities-functions)
-5. [Documentation](#documentation)
-6. [Authors](#authors)
+4. [Question 2](#question-2)
+5. [Question 3](#question-3)
+6. [Question 4](#question-4)
+7. [Question 5](#question-5)
+8. [Question 6](#question-6)
+9. [Utilities Functions](#utilities-functions)
+10. [Documentation](#documentation)
+11. [Authors](#authors)
 
 
 ---
@@ -71,7 +76,7 @@ This project is licensed under the MIT License, which is a highly permissive and
 
 ##  Question 1
 
-This question is stored in `WRITE-UP`->`Question-1`. The following section explains step by step how the problem in question 1 was approached. This section also contains code chunks used in the creation of the write-up document.
+This question is stored in `WRITE-UPS`->`Question-1`. The following section explains step by step how the problem in question 1 was approached. This section also contains code chunks used in the creation of the write-up document.
 
 ### The folllowing questions guide the analysis:
 
@@ -89,6 +94,112 @@ This question is stored in `WRITE-UP`->`Question-1`. The following section expla
 ### Some pitfalls along the way:
 
 ---
+
+##  Question 2
+
+This question is stored in `WRITE-UPS`->`Question-2`. The following section explains step by step how the problem in question 1 was approached. This section also contains code chunks used in the creation of the write-up document.
+
+### The folllowing questions guide the analysis:
+
+
+### Code:
+
+
+#### Data operations:
+
+
+#### Plotting:
+
+
+
+### Some pitfalls along the way:
+
+---
+
+##  Question 3
+
+This question is stored in `WRITE-UPS`->`Question-3`. The following section explains step by step how the problem in question 1 was approached. This section also contains code chunks used in the creation of the write-up document.
+
+### The folllowing questions guide the analysis:
+
+
+### Code:
+
+
+#### Data operations:
+
+
+#### Plotting:
+
+
+
+### Some pitfalls along the way:
+
+---
+
+##  Question 4
+
+This question is stored in `WRITE-UPS`->`Question-4`. The following section explains step by step how the problem in question 1 was approached. This section also contains code chunks used in the creation of the write-up document.
+
+### The folllowing questions guide the analysis:
+
+
+### Code:
+
+
+#### Data operations:
+
+
+#### Plotting:
+
+
+
+### Some pitfalls along the way:
+
+---
+
+##  Question 5
+
+This question is stored in `WRITE-UPS`->`Question-5`. The following section explains step by step how the problem in question 1 was approached. This section also contains code chunks used in the creation of the write-up document.
+
+### The folllowing questions guide the analysis:
+
+
+### Code:
+
+
+#### Data operations:
+
+
+#### Plotting:
+
+
+
+### Some pitfalls along the way:
+
+---
+
+##  Question 6
+
+This question is stored in `WRITE-UPS`->`Question-6`. The following section explains step by step how the problem in question 1 was approached. This section also contains code chunks used in the creation of the write-up document.
+
+### The folllowing questions guide the analysis:
+
+
+### Code:
+
+
+#### Data operations:
+
+
+#### Plotting:
+
+
+
+### Some pitfalls along the way:
+
+---
+
 
 ##  Utilities Functions:
 
