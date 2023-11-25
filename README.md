@@ -99,7 +99,7 @@ The following section explains step by step how the problem in question 1 was ap
 - I prefer working with aggregate data sets (easier for plotting and analysis). The main merged data frames have the prefix Rets_ ("Returns").
   -  `Rets_long`: long format of merged data
   -  `Rets_wide`: wide format of merged data
-  -  `Rets_long_cum`: filtered version of Rets_long that only starts with date >= 2014-02-28 (the date from which all funds have full data availability)
+  -  `Rets_long_cum`: filtered version of Rets_long that only starts with date >= 2014-02-28 (the date from which all funds have full data availability); contains cumulative returns for each fund and benchmark.
 - I later realised that I wanted to produce a scatter plot, which required additional data operations and allows me to compare the actively managed and AI funds with the benchmark. This new data set was saved as `Funds_all` (that is, all the AI and actively managed funds, compared to the Benchmark)
   -  The reason this was done: I needed both an x- and y-variable (and not the benchmark, AI, and actively managed funds in one variable (column)
   -  I then created `Funds_all` where the Benchmark can be used as an x-variable and AI and Actively Managed funds can be used as y-variables
