@@ -106,3 +106,191 @@ tablestats <-
   table.Stats(., ci = 0.95, digits = 3)
 print(tablestats[,1:5])
 
+
+# Question 2
+
+library(rportfolios)
+dailydata <- fmxdat::findata
+
+dailydata.subset <- 
+  
+  dailydata %>% 
+  
+  gather(Stocks, Px, -Date) %>% 
+  
+  arrange(Date) %>% 
+  
+  group_by(Stocks) %>% 
+  
+  mutate(Returns = Px/lag(Px)-1) %>% ungroup() %>% filter(Date > first(Date)) %>% 
+  
+  select(-Px)
+
+# Let's assume the portfolio rebalances each January and July.
+
+# First, let's save the exact rebalance dates and save the random weight and date information to be used later:
+# Below is a very nice way to save months and years: let's rebalance at month 1 and 7... 
+
+RebMonths <- c(3, 6, 9, 12) # Make a parameter that can easily be changed later.
+
+RandomWeights <- 
+  
+  dailydata.subset %>% 
+  
+  mutate(Months = as.numeric(format(Date, format = "%m")), 
+         
+         YearMonths = as.numeric(format(Date, format = "%Y%m"))) %>% 
+  
+  filter(Months %in% RebMonths) %>% 
+  
+  group_by(YearMonths, Months, Stocks) %>% filter(Date == last(Date)) %>% ungroup()
+
+# Now let's create a column with the random weights assigned to each stock conforming to the following parameters:
+# Let's also create a random weighting vector for our selected stocks, with the following parameters:
+# They have to sum to 1...
+# Let's add constraints too - you can only have a maximum exposure to a single stock up to 20% of the equal weight.
+N_Stocks <- length(unique(RandomWeights$Stocks))
+
+Max_Exposure <-(1/N_Stocks)*1.20
+
+# Minimum exposure is, say, 2%:
+Min_Exposure <- 0.02
+
+# Now to append the weight vector, let's use the random.bounded function from rportfolios.
+
+RandomWeights_adj <-  
+  bind_cols(RandomWeights %>% arrange(Date),
+            RandomWeights %>% group_by(Date) %>% 
+              
+              do( Randweights = random.bounded(n = nrow(.), 
+                                               x.t = 1, # Full investment... 
+                                               x.l = rep( Min_Exposure, nrow(.)), # Lower Bound 
+                                               x.u = rep( Max_Exposure, nrow(.)), 
+                                               max.iter = 1000) ) %>% ungroup() %>% unnest(Randweights) %>% select(-Date)
+  )
+
+# Sanity check: Create a stop function if it doesn't hold...
+if( RandomWeights_adj %>% group_by(Date) %>% 
+    
+    summarise(Fully_Invested = sum(Randweights)) %>% filter(Fully_Invested > 1.000001 | Fully_Invested < 0.9999999 ) %>% nrow() > 0 ) stop("\n=============\n Ooops! \nWeights do not sum to 1... Please check!\n===========\n")
+
+# Create equal weight portfolios as well:
+RandomWeights_adj <- 
+  
+  RandomWeights_adj %>% 
+  
+  group_by(Date) %>% 
+  
+  mutate(EqualWeights = 1/n()) %>% 
+  
+  ungroup() %>% select(-Months, -YearMonths)
+
+# Right, so now we have equal and random-weights that we can use at rebalancing dates: January and July.
+
+pacman::p_load("PerformanceAnalytics")
+
+# Now we use the Safe_Return.portfolio function from PerformanceAnalytics
+# Note, as with most PA functions, the inputs are xts and wide...
+# Also, let's assume you are investing R1000 at the start:
+Fund_Size_at_Start <- 1000
+
+Rand_weights <- 
+  RandomWeights_adj %>% select(Date, Stocks, Randweights) %>% spread(Stocks, Randweights) %>% tbl_xts()
+
+EW_weights <- 
+  RandomWeights_adj %>% select(Date, Stocks, EqualWeights) %>% spread(Stocks, EqualWeights) %>% tbl_xts()
+
+df_Returns <- 
+  dailydata.subset %>% spread(Stocks, Returns)
+
+df_Returns[is.na(df_Returns)] <- 0
+xts_df_Returns <- df_Returns %>% tbl_xts()
+
+Rand_RetPort <- 
+  rmsfuns::Safe_Return.portfolio(xts_df_Returns, 
+                                 
+                                 weights = Rand_weights, lag_weights = TRUE,
+                                 
+                                 verbose = TRUE, contribution = TRUE, 
+                                 
+                                 value = Fund_Size_at_Start, geometric = TRUE) 
+
+EW_RetPort <- 
+  rmsfuns::Safe_Return.portfolio(xts_df_Returns, 
+                                 
+                                 weights = EW_weights, lag_weights = TRUE,
+                                 
+                                 verbose = TRUE, contribution = TRUE, 
+                                 
+                                 value = Fund_Size_at_Start, geometric = TRUE) 
+
+# Clean and save portfolio returns and weights:
+Rand_Contribution <- 
+  Rand_RetPort$"contribution" %>% xts_tbl() 
+
+Rand_BPWeight <- 
+  
+  Rand_RetPort$"BOP.Weight" %>% xts_tbl() 
+
+Rand_BPValue <- 
+  
+  Rand_RetPort$"BOP.Value" %>% xts_tbl()  
+
+# Clean and save portfolio returns and weights:
+EW_Contribution <- 
+  EW_RetPort$"contribution" %>% xts_tbl() 
+
+EW_BPWeight <- 
+  EW_RetPort$"BOP.Weight" %>% xts_tbl()  
+
+EW_BPValue <- 
+  EW_RetPort$"BOP.Value" %>% xts_tbl()
+
+
+names(Rand_Contribution) <- c("date", names(Rand_RetPort$"contribution"))
+names(Rand_BPWeight) <- c("date", names(Rand_RetPort$"BOP.Weight"))
+names(Rand_BPValue) <- c("date", names(Rand_RetPort$"BOP.Value"))
+
+names(EW_Contribution) <- c("date", names(Rand_RetPort$"contribution"))
+names(EW_BPWeight) <- c("date", names(Rand_RetPort$"BOP.Weight"))
+names(EW_BPValue) <- c("date", names(Rand_RetPort$"BOP.Value"))
+
+# Look at what these data.frames each convey - incredible right?
+
+# Let's bind all of these together now:
+
+df_port_return_Random <- 
+  left_join(dailydata.subset %>% rename("date" = Date),
+            Rand_BPWeight %>% gather(Stocks, weight, -date),
+            by = c("date", "Stocks") ) %>% 
+  
+  left_join(.,
+            Rand_BPValue %>% gather(Stocks, value_held, -date),
+            by = c("date", "Stocks") ) %>% 
+  
+  left_join(.,
+            Rand_Contribution %>% gather(Stocks, Contribution, -date),
+            by = c("date", "Stocks"))
+
+df_port_return_EW <- 
+  left_join(dailydata.subset %>% rename("date" = Date),
+            EW_BPWeight %>% gather(Stocks, weight, -date),
+            by = c("date", "Stocks") ) %>% 
+  
+  left_join(.,
+            EW_BPValue %>% gather(Stocks, value_held, -date),
+            by = c("date", "Stocks") ) %>% 
+  
+  left_join(.,
+            EW_Contribution %>% gather(Stocks, Contribution, -date),
+            by = c("date", "Stocks"))
+
+# Calculate Portfolio Returns:
+df_Portf_Random <- 
+  df_port_return_Random %>% group_by(date) %>% summarise(PortfolioReturn = sum(Returns*weight, na.rm =TRUE)) %>% 
+  filter(PortfolioReturn != 0)
+
+# Calculate Portfolio Returns:
+df_Portf_EW <- 
+  df_port_return_EW %>% group_by(date) %>% summarise(PortfolioReturn = sum(Returns*weight, na.rm =TRUE)) %>% 
+  filter(PortfolioReturn != 0)

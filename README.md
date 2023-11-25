@@ -83,10 +83,10 @@ The following section explains step by step how the problem in question 1 was ap
 
 ### The folllowing questions guide the analysis:
 
-1. **How does the AI Implementer fund's performance compare with the Capped SWIX benchmark and ASISA active managers over the entire period?**
-2. **Does the AI Implementer fund consistently outperform the benchmark after accounting for fees?**
-3. **How significantly do management and performance fees impact the net returns of the AI Implementer fund compared to the benchmark and peers?**
-4. **What is the correlation between benchmark and the performance of the AI Implementer fund?**
+1. **Static Analysis:** How does the AI Implementer fund's performance compare with the Capped SWIX benchmark and ASISA active managers over the entire period?
+2. **Fees and Performance:** Does the AI Implementer fund consistently outperform the benchmark after accounting for fees?
+3. **Cumulative Returns Performance:** How significantly do management and performance fees impact the net returns of the AI Implementer fund compared to the benchmark and peers?
+4. **Correlations:** What is the correlation between benchmark and the performance of the AI Implementer fund?
 
 ### Code:
 
@@ -263,6 +263,36 @@ This question is stored in `WRITE-UPS`->`Question-2`. The following section expl
 
 ### The folllowing questions guide the analysis:
 
+1. **Impact on Returns:** What is the impact of currency hedging on the long-term returns of the portfolio? Does hedging enhance or diminish overall returns?
+2. **Volatility Comparison:** How does the rolling realized volatility of a fully hedged portfolio compare to an unhedged portfolio over time? 
+3. **Correlation Analysis:** How does the correlation between the South African Rand (ZAR) and global assets (like MSCI ACWI and Global Bond Aggregate) influence the portfolio's performance?
+4. **Risk-Adjusted Returns:** How do risk-adjusted returns (e.g., Sharpe Ratio) differ between the hedged and unhedged portfolios?
+5. **Diversification Benefits:** Does currency hedging enhance the diversification benefits of the portfolio? How does it affect the portfolio's risk profile?
+6. **Tactical vs. Strategic Hedging:** What insights can be gained about the effectiveness of tactical (short-term) versus strategic (long-term) currency hedging?
+7. **Currency Fluctuations:** How do fluctuations in the ZAR/USD exchange rate impact the performance of the local and global components of the portfolio?
+
+### Approach:
+
+To replicate the study and compare a hedged and unhedged portfolio, we'll need to follow these steps:
+
+1.  Create the Portfolio Composition:
+
+- The portfolio is a 60/40 Equity/Bond split with a 70/30 Local/Global split.
+- In the Indexes dataframe, we have MSCI_ACWI and Bbg_Agg for global equity and bond indices, and J433 and ALBI for local equity and bond indices.
+
+2.  Calculate Portfolio Returns:
+
+- Combine returns according to the specified portfolio weights.
+
+3. Hedging and Unhedging:
+
+- For the unhedged portfolio, we'll use the returns as they are.
+- For the hedged portfolio, we'll need to adjust the returns of the global components (MSCI_ACWI and Bbg_Agg) using the exchange rate data in ZAR. This simulates the effect of hedging against currency fluctuations.
+
+4.  Compare the Portfolios:
+
+- Calculate the rolling realized volatility for both portfolios.
+- Compare these volatilities over time to analyze the impact of hedging.
 
 ### Code:
 
@@ -275,6 +305,9 @@ This question is stored in `WRITE-UPS`->`Question-2`. The following section expl
 
 
 ### Some pitfalls along the way:
+
+- Because of the weighting of the portfolio, we would need to readjust the weights periodically.
+- The last day of the month for ZAR does not align with Indexes. However, I opted to calculate the month on month exchange rate appreciation/depreciation and then overlapped that with the dates for Indexes
 
 ---
 

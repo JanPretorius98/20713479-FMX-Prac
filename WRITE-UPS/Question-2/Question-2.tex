@@ -130,6 +130,9 @@
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 
 %%% Include extra packages specified by user
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{longtable}
 
 %%% Hard setting column skips for reports - this ensures greater consistency and control over the length settings in the document.
 %% page layout
@@ -222,7 +225,30 @@ Insert abstract if necessary.
 
 
 
+\includegraphics{Question-2_files/figure-latex/unnamed-chunk-1-1.pdf}
 
+\includegraphics{Question-2_files/figure-latex/scatterplot-1.pdf}
+
+\hypertarget{next-create-the-downside-risk-table-from-prac-2}{%
+\section{Next create the downside risk table from Prac
+2}\label{next-create-the-downside-risk-table-from-prac-2}}
+
+\begin{longtable}{l|rr}
+\caption*{
+{\large Downside Risk Estimates}
+} \\ 
+\toprule
+\multicolumn{1}{l}{} & Unhedged & Hedged \\ 
+\midrule
+Semi Deviation & $2.11\%$ & $2.14\%$ \\ 
+Downside Deviation (Rf=0\%) & $1.72\%$ & $1.76\%$ \\ 
+Maximum Drawdown & $24.96\%$ & $26.01\%$ \\ 
+Historical VaR (95\%) & $-3.99\%$ & $-4.22\%$ \\ 
+Historical ES (95\%) & $-5.88\%$ & $-6.04\%$ \\ 
+Modified VaR (95\%) & $-4.12\%$ & $-4.22\%$ \\ 
+Modified ES (95\%) & $-6.74\%$ & $-7.04\%$ \\ 
+\bottomrule
+\end{longtable}
 
 \bibliography{Tex/ref}
 

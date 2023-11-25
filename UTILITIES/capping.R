@@ -53,17 +53,3 @@ Proportional_Cap_Foo <- function(df_Cons, W_Cap = 0.08){
   df_Cons
   
 }
-
-
-# Now, to map this across all the dates, we can use purrr::map_df as follows:
-Capped_df <- 
-  
-  rebalance_col %>% 
-  # Split our df into groups (where the groups here are the rebalance dates:
-  group_split(RebalanceTime) %>% 
-  
-  # Apply the function Proportional_Cap_Foo to each rebalancing date:
-  map_df(~Proportional_Cap_Foo(., W_Cap = 0.08) ) %>% select(-RebalanceTime)
-
-# Testing this:
-Capped_df %>% pull(weight) %>% max(.)
