@@ -2,6 +2,9 @@
 
 This repository contains the materials for the Financial Econometrics 871 practical test, including datasets, utility scripts for analysis, and documentation templates for questions and presentations.
 
+##  Internal Note/To Do:
+- Fix presentation notes of Question 1 (specifically the boxplots)
+
 ##  Note on question documentation:
 
 Documentation for questions will follow this general format:
@@ -93,11 +96,16 @@ The following section explains step by step how the problem in question 1 was ap
 
 #### Data operations:
 
-- Uncertain whether all of the funds in ASISA are actively managed. My line of thinking is that if the fund is not and index (`Index` == "No"), it is actively managed. None of the funds are fund of funds (FoF), so this column is unneeded. Here I filter for actively managed funds and drop the Index and FoF columns (for cleaner data structure).
+- Uncertain whether all of the funds in ASISA are actively managed. My line of thinking is that if the fund is not an index (`Index` == "No"), it is actively managed. None of the funds are fund of funds (FoF), so this column is unneeded. Here I filter for actively managed funds and drop the Index and FoF columns (for cleaner data structure).
 - Comparing all of the ASISA funds might be too broad. I then opted to randomly select 4 funds, as well as the average returns, to compare with the benchmark and AI fund.
 - I then also adjusted returns based on fees, using the `fee-converter` function I created, that adjusts returns based on annual fees; which I specified as 100bps
-- I prefer working with one aggregate data set (easier for plotting and analysis). The main merged data frame is referred to as Rets_ ("Returns"). I also merged all the data both in long (Rets_long) and wide (Rets_merged) format, depending on the need.
-- I later realised that I wanted to produce a scatter plot, which required additional data operations and allows me to compare all the actively managed funds with the AI and benchmark. This new data set was saved as Funds_all (that is, all the AI and actively managed funds, compared to the Benchmark)
+- I prefer working with aggregate data sets (easier for plotting and analysis). The main merged data frames have the prefix Rets_ ("Returns").
+  -  `Rets_long`: long format of merged data
+  -  `Rets_wide`: wide format of merged data
+  -  `Rets_long_cum`: filtered version of Rets_long that only starts with date >= 2014-02-28 (the date from which all funds have full data availability); contains cumulative returns for each fund and benchmark.
+- I later realised that I wanted to produce a scatter plot, which required additional data operations and allows me to compare the actively managed and AI funds with the benchmark. This new data set was saved as `Funds_all` (that is, all the AI and actively managed funds, compared to the Benchmark)
+  -  The reason this was done: I needed both an x- and y-variable (and not the benchmark, AI, and actively managed funds in one variable (column)
+  -  I then created `Funds_all` where the Benchmark can be used as an x-variable and AI and Actively Managed funds can be used as y-variables
 
 ```r
 
