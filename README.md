@@ -18,7 +18,7 @@ Documentation for questions will follow this general format:
 1. [Installation](#installation)
 2. [Project Organization](#project-organization)
 3. [Question 1](#question-1)
-4. [Utilities](#utilities)
+4. [Utilities Functions](#utilities-functions)
 5. [Documentation](#documentation)
 6. [Authors](#authors)
 
@@ -90,7 +90,7 @@ This question is stored in `WRITE-UP`->`Question-1`. The following section expla
 
 ---
 
-##  Utilities:
+##  Utilities Functions:
 
 The following section shows the code used in the UTILITIES folder (in alphabetical order):
 
