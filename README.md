@@ -281,6 +281,10 @@ This question is stored in `WRITE-UPS`->`Question-2`. The following section expl
 
 ### Approach:
 
+Let us first work on an approach to simulate currency hedging. Here is my line of thinking to do so:
+
+I attempt to simulate the effect of currency hedging on an investment portfolio by adjusting the returns of South African indices (J433, ALBI) in response to the ZAR/USD exchange rate fluctuations. The methodology involves recalculating the returns of these local indices by multiplying them with (1 + ExchangeRateGrowth), derived from the ZAR/USD exchange rate data. This adjustment aims to nullify the impact of currency movements, mimicking a hedging strategy that protects against exchange rate risks. The performance of this 'fully hedged' portfolio is then compared with an 'unhedged' portfolio (without such adjustments) to evaluate the effectiveness of the simulated currency hedging strategy in stabilizing portfolio returns against foreign exchange volatility. **Note:** Both the 'hedged' and 'unhedged' portfolios were rebalanced every quarter.
+
 To replicate the study and compare a hedged and unhedged portfolio, we'll need to follow these steps:
 
 1.  Create the Portfolio Composition:
@@ -295,7 +299,7 @@ To replicate the study and compare a hedged and unhedged portfolio, we'll need t
 3. Hedging and Unhedging:
 
 - For the unhedged portfolio, we'll use the returns as they are.
-- For the hedged portfolio, we'll need to adjust the returns of the global components (MSCI_ACWI and Bbg_Agg) using the exchange rate data in ZAR. This simulates the effect of hedging against currency fluctuations.
+- For the hedged portfolio, we'll need to adjust the returns of the South African components (J433 & ALBI) using the exchange rate data in ZAR. This simulates the effect of hedging against currency fluctuations.
 
 4.  Compare the Portfolios:
 

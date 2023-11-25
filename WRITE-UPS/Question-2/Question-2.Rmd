@@ -111,7 +111,7 @@ ZAR <- ZAR %>% mutate(ExchangeRateGrowth = (value / lag(value)) - 1)
 Indexes_adjusted <- Indexes %>%
   mutate(date = as.Date(date)) %>%
   left_join(ZAR %>% select(date, ExchangeRateGrowth), by = "date") %>%
-  mutate_at(vars(MSCI_ACWI, Bbg_Agg), ~ . * (1 + ExchangeRateGrowth)) %>% 
+  mutate_at(vars(J433, ALBI), ~ . * (1 + ExchangeRateGrowth)) %>% 
   select(-c(ExchangeRateGrowth))
 
 Hedged_portf <- calculatePortfolioReturns(Indexes_adjusted, RebMonths) %>% 

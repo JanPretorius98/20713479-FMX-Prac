@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.25)  26 NOV 2023 00:45
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.25)  26 NOV 2023 01:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -631,12 +631,12 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <10.95> on input line 201.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <8> on input line 201.
-<Question-2_files/figure-latex/unnamed-chunk-1-1.pdf, id=8, 433.62pt x 361.35pt>
+<Question-2_files/figure-latex/unnamed-chunk-1-1.pdf, id=12, 433.62pt x 361.35pt>
 File: Question-2_files/figure-latex/unnamed-chunk-1-1.pdf Graphic file (type pdf)
 <use Question-2_files/figure-latex/unnamed-chunk-1-1.pdf>
 Package pdftex.def Info: Question-2_files/figure-latex/unnamed-chunk-1-1.pdf  used on input line 228.
 (pdftex.def)             Requested size: 433.61894pt x 361.34912pt.
-<Question-2_files/figure-latex/scatterplot-1.pdf, id=9, 505.89pt x 289.08pt>
+<Question-2_files/figure-latex/scatterplot-1.pdf, id=13, 505.89pt x 289.08pt>
 File: Question-2_files/figure-latex/scatterplot-1.pdf Graphic file (type pdf)
 <use Question-2_files/figure-latex/scatterplot-1.pdf>
 Package pdftex.def Info: Question-2_files/figure-latex/scatterplot-1.pdf  used on input line 230.
@@ -664,21 +664,21 @@ LaTeX2e <2023-11-01>
 L3 programming layer <2023-11-09>
  ***********
 Package rerunfilecheck Info: File `Question-2.out' has not changed.
-(rerunfilecheck)             Checksum: A6808081D8AF5CE74510D65C109E6216;302.
+(rerunfilecheck)             Checksum: 9C94AD749A7680D06B17811199321A26;453.
  ) 
 Here is how much of TeX's memory you used:
- 16278 strings out of 476227
- 306169 string characters out of 5794748
+ 16282 strings out of 476227
+ 306231 string characters out of 5794748
  1930555 words of memory out of 5000000
- 37980 multiletter control sequences out of 15000+600000
+ 37982 multiletter control sequences out of 15000+600000
  611438 words of font info for 74 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  75i,11n,79p,547b,902s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr9.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri7.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri9.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
-Output written on Question-2.pdf (2 pages, 218761 bytes).
+Output written on Question-2.pdf (2 pages, 220036 bytes).
 PDF statistics:
- 106 PDF objects out of 1000 (max. 8388607)
- 76 compressed objects within 1 object stream
- 7 named destinations out of 1000 (max. 500000)
- 19 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 111 PDF objects out of 1000 (max. 8388607)
+ 81 compressed objects within 1 object stream
+ 9 named destinations out of 1000 (max. 500000)
+ 27 words of extra memory for PDF output out of 10000 (max. 10000000)
 
