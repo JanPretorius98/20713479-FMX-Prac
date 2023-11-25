@@ -82,3 +82,27 @@ rebalance_col <-
   select(-Sector, -return)
 
 
+# Question 1
+
+library(rmsfuns)
+pacman::p_load("tidyr", "tbl2xts","devtools","lubridate", "readr", "PerformanceAnalytics", "ggplot2", "dplyr")
+dailydata <- fmxdat::findata
+pacman::p_load("TTR")
+dailydata <- 
+  dailydata %>% arrange(Date) %>% 
+  mutate(across(.cols = -Date, .fns = ~TTR::ROC(., type = c("continuous", "discrete")[2]))) %>% 
+  # Equivalent to:   # mutate_at(.vars = vars(-Date), ~./lag(.)-1) %>% 
+  # continuous equivalent to:   # mutate_at(.vars = vars(-Date), ~(log(.)-log(lag(.)))) 
+  mutate_at(.vars = vars(-Date), ~na.locf(., na.rm = F, maxgap = 5)) %>% filter(Date > first(Date))
+# Pad NA's back max 5 days:
+# Let's not waste our time - remove spaces in column names!
+colnames(dailydata) <- 
+  gsub("JSE\\.","",colnames(dailydata))
+colnames(dailydata) <- 
+  gsub("\\.Close","",colnames(dailydata))
+
+tablestats <-
+  dailydata %>% tbl_xts() %>% 
+  table.Stats(., ci = 0.95, digits = 3)
+print(tablestats[,1:5])
+

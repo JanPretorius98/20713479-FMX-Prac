@@ -1,0 +1,76 @@
+---
+title: "Fee Impact and AI Advantage"
+subtitle: "Rethinking Fund Performance"
+author: "Jan-Hendrik Pretorius"
+institute: "Stellenbosch University"
+date: "`r Sys.Date()`"
+fontsize: 11pt 
+output: 
+  beamer_presentation:
+    theme: "metropolis" 
+    colortheme: "default" 
+    fonttheme: "structurebold"
+    slide_level: 2
+    fig_width: 4
+    fig_height: 2
+header-includes:
+   - \usepackage{FiraSans} 
+   - \setbeamertemplate{navigation symbols}{} 
+   - \setbeamertemplate{footline}[frame number]
+   - \setbeamertemplate{caption}[numbered]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 6, fig.height = 5, fig.pos="H", fig.pos = 'H')
+
+```
+
+## Introduction
+- This presentation compares AI Implementer, a systematic Artificial Intelligence fund, with industry peers (four randomly sampled ASISA actively managed funds) and the benchmark (Capped SWIX).
+- Throughout, a modest management fee of 100bps was applied to simulate net returns for actively managed funds.
+
+## AI Implementer vs. Active Management
+
+\footnotesize
+:::::::::::::: {.columns}
+::: {.column width="30%"}
+
+- AI Implementer fund has a 2% median return, higher than peers.
+- Superior consistency shown by a tighter IQR than active funds.
+- Minimal outliers reflect reduced risk of significant losses.
+
+:::
+::: {.column width="70%"}
+![](Figures/boxplot.png)
+
+:::
+::::::::::::::
+
+## Correlation of Fund Returns to Benchmark
+
+\footnotesize
+:::::::::::::: {.columns}
+::: {.column width="30%"}
+- Performance aligns closely with benchmark standards.
+- Actively managed funds show varied performance, while AI Implementer demonstrates consistent returns against the benchmark.
+:::
+::: {.column width="70%"}
+![](Figures/scatplot.png)
+
+:::
+::::::::::::::
+
+## Cumulative Returns over Time
+
+\footnotesize
+:::::::::::::: {.columns}
+::: {.column width="30%"}
+- AI Implementer consistently outperforms the benchmark.
+- Some funds, including N170 and F1072, outperform the benchmark at certain intervals.
+- On average, however, actively managed funds are below the benchmark.
+:::
+::: {.column width="70%"}
+![](Figures/cumplot.png)
+
+:::
+::::::::::::::

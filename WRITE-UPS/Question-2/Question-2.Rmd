@@ -68,12 +68,7 @@ source(paste0(path, "UTILITIES/libraries.R")) #   Load libraries
 source(paste0(path, "UTILITIES/aesthetics.R")) #  Get plot themes
 
     #   Load Data
-#file <- "TEST-DATA.xlsx"
-#df_deaths <- read_xlsx(paste0(path, "DATA/", file))
 
-ASISA <- read_rds(paste0(path, "DATA/","ASISA Rets.rds"))
-BM <- read_rds(paste0(path, "Capped SWIX.rds"))
-AI_Fund <- read_rds(paste0(path, "AI Max Fund.rds"))
 ```
 
 <!-- ############################## -->

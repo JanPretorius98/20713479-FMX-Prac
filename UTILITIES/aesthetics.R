@@ -24,7 +24,7 @@ th <- theme(
     # Title, subtitle, and caption
     plot.title = element_text(size = 14,family = "Palatino",face = "bold"),
     plot.subtitle = element_text(size = 12,family = "Palatino"),
-    plot.caption = element_text(size = 10,family = "Palatino", hjust = 0),
+    plot.caption = element_text(size = 10,family = "Palatino", hjust = 1),
 
     # Legend
     legend.position = "bottom",

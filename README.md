@@ -62,6 +62,7 @@ This folder houses external scripts that enhance functionality.
   - `libraries.R`: Loads all necessary libraries and packages for the project via pacman.
   - `capping.R`: Provides the `Proportional_Cap_Foo` function
   - `missing-values.R`: Provides the `impute_missing_returns` function
+  - `fee-converter.R`: Provides the `fee_converter` function
 
 ### `WRITE-UPS`:
 Stores all write-ups and documentation for questions.
@@ -80,18 +81,170 @@ This question is stored in `WRITE-UPS`->`Question-1`. The following section expl
 
 ### The folllowing questions guide the analysis:
 
+1. **How does the AI Implementer fund's performance compare with the Capped SWIX benchmark and ASISA active managers over the entire period?**
+2. **Does the AI Implementer fund consistently outperform the benchmark after accounting for fees?**
+3. **How significantly do management and performance fees impact the net returns of the AI Implementer fund compared to the benchmark and peers?**
+4. **What is the correlation between benchmark and the performance of the AI Implementer fund?**
 
 ### Code:
 
 
 #### Data operations:
 
+- Uncertain whether all of the funds in ASISA are actively managed. My line of thinking is that if the fund is not and index (`Index` == "No"), it is actively managed. None of the funds are fund of funds (FoF), so this column is unneeded. Here I filter for actively managed funds and drop the Index and FoF columns (for cleaner data structure).
+- Comparing all of the ASISA funds might be too broad. I then opted to randomly select 4 funds, as well as the average returns, to compare with the benchmark and AI fund.
+- I then also adjusted returns based on fees, using the `fee-converter` function I created, that adjusts returns based on annual fees; which I specified as 100bps
+- I prefer working with one aggregate data set (easier for plotting and analysis). The main merged data frame is referred to as Rets_ ("Returns"). I also merged all the data both in long (Rets_long) and wide (Rets_merged) format, depending on the need.
+- I later realised that I wanted to produce a scatter plot, which required additional data operations and allows me to compare all the actively managed funds with the AI and benchmark. This new data set was saved as Funds_all (that is, all the AI and actively managed funds, compared to the Benchmark)
+
+```{r data_operations}
+
+set.seed(123321)
+sample_size = 4
+
+# Filter ASISA for actively managed funds
+ASISA_filtered <- ASISA %>%
+  filter(Index == "No") %>%
+  select(-Index, -FoF)
+
+# Get average returns for active funds
+ASISA_mean <- ASISA_filtered %>%
+  group_by(date) %>%
+  summarise(Returns = mean(Returns, na.rm = TRUE)) %>% 
+  mutate(Fund = "Active Avg") %>%
+  mutate(Returns = fee_converter(Returns, 0.01))
+
+# Sample 4 random active funds from ASISA
+ASISA_prepared <- ASISA_filtered %>%
+  distinct(Fund) %>%
+  sample_n(sample_size) %>%
+  inner_join(ASISA_filtered, by = "Fund") %>%
+  mutate(Returns = fee_converter(Returns, 0.01))
+
+# Preparing AI dataframe
+AI_prepared <- AI %>%
+  rename(Returns = AI_Fund) %>%
+  mutate(Fund = "AI Implementer")
+
+# Preparing BM dataframe
+BM_prepared <- BM %>%
+  select(-Tickers) %>%
+  mutate(Fund = "Benchmark")
+
+# Merging all dataframes
+Rets_long <- bind_rows(AI_prepared, BM_prepared, ASISA_prepared, ASISA_mean)
+
+
+# Converting to wide format
+Rets_wide <- Rets_long %>%
+  spread(key = Fund, value = Returns)
+
+#   Calculate cumulative returns
+Rets_long_cum <- Rets_long %>%
+  filter(date >= as.Date("2014-02-28")) %>%
+  group_by(Fund) %>%
+  mutate(Cumulative_Returns = cumprod(1 + Returns)) %>%
+  ungroup()
+
+#   Comparing Funds against the Benchmark
+
+# Prepare BM_all
+BM_all <- BM_prepared %>%
+  select(-Fund) %>%
+  rename(Benchmark = Returns)
+
+# Prepare ASISA_all
+ASISA_all <- ASISA_prepared %>%
+  mutate(Fund = "Actively Managed")
+
+# Merge dataframes
+merge_AI <- left_join(AI_prepared, BM_all, by = 'date')
+merge_ASISA <- left_join(ASISA_all, BM_all, by = 'date')
+
+Funds_all <- bind_rows(merge_AI, merge_ASISA)
+
+```
+
+#### Data Inspection:
+
+```{r inspect}
+
+# Basic data inspection
+tablestats <-
+  Rets_wide %>% tbl_xts() %>% 
+  table.Stats(., ci = 0.95, digits = 3)
+print(tablestats[,1:7])
+
+```
 
 #### Plotting:
 
+```{r boxplot}
 
+# Calculate the median for the AI fund
+ai_median <- median(Rets_wide$`AI Implementer`, na.rm = TRUE)
+
+boxplot <- Rets_long %>% 
+    ggplot(aes(x = Fund, y = Returns, fill = Fund)) +
+      geom_boxplot(color = "black") +
+      geom_hline(yintercept = ai_median, linetype = "dashed", color = "black", size = 1) +
+      scale_fill_manual(values = palette) +
+      labs(title = "Comparison of Returns* Across Funds",
+           subtitle = "Horizontal dashed line represents median of AI Implementer returns,\nwhich is 0.02.",
+           caption = "*After fees (Management fee is 100bps)",
+           x = "Fund",
+           y = "Returns",
+           fill = "Fund") +
+      th +
+      theme(legend.position = "none",
+            axis.text.x = element_text(angle=90, hjust = 1))
+ggsave("Figures/boxplot.png", plot = boxplot)
+
+```
+
+```{r scatplot}
+
+# Create the scatter plot
+scatplot <- Funds_all %>% 
+    ggplot(aes(x = Benchmark, y = Returns, color = Fund)) +
+        geom_point(size = 1) +  # Add points
+        geom_abline(slope = 1, intercept = 0, linetype = "dashed") +  # 45-degree line
+        geom_smooth(method = "lm", formula = y ~ x, aes(group = Fund), se = FALSE) +  # Ab-lines
+        scale_color_manual(values = palette) +
+        labs(title = "Comparison of Fund Returns* vs. Benchmark",
+             subtitle = "Dashed line represents a 45º-line, indicating a 1-to-1 correlation between\nfund returns and benchmark.",
+             caption = "*After fees (Management fee is 100bps)",
+             x = "Benchmark Returns",
+             y = "Fund Returns",
+             color = "Fund Type") + th
+
+ggsave("Figures/scatplot.png", plot = scatplot)
+
+```
+
+
+```{r cumplot}
+cumplot <- Rets_long_cum %>% 
+    #filter(Fund == "Active Avg" | Fund == "AI Implementer" | Fund == "Benchmark") %>% 
+    ggplot(aes(x = date, y = Cumulative_Returns, color = Fund)) +
+      geom_line(size = 1) +
+      scale_color_manual(values = palette) +
+      labs(title = "Growth of $1 Invested* Over Time",
+           caption = "*After fees (Management fee is 100bps)",
+           x = "Date",
+           y = "Cumulative Returns",
+           color = "Fund") +
+      scale_y_continuous(labels = scales::dollar_format(prefix = "$", suffix = "")) +
+      th
+
+ggsave("Figures/cumplot.png", plot = cumplot)
+
+```
 
 ### Some pitfalls along the way:
+
+- Comparing the plethora of ASISA funds with the benchmark and AI fund proved too wide. I had to narrow down the funds to compare. I first tried average returns, but this means that we lose a lot of the particular nuance in many of the funds. I then opted to compare quartiles, but in doing so, you bias the comparison by comparing low performing, average performing, and high performing funds by "selecting them". You also lose very important risk metrics. The final call was to randomly select 4 funds to compare as well as the average returns of the active funds.
+- Many of the actively managed funds have data only starting from much later. For the cumulative returns analysis, I had to filter the data from specific periods (in this case from 2014-02-28) in order to accurately compare cumulative returns.
 
 ---
 
@@ -296,12 +449,37 @@ th <- theme(
 )
 ```
 
+### `fee_converter.R`
+
+```r
+
+# Goal: calculate returns after fees
+
+fee_converter <- function(stock_returns, annual_fee) {
+  # Function to convert annual fee to monthly compounded fee
+  monthly_fee_converter <- function(annual_fee) {
+    (1 + annual_fee)^(1/12) - 1
+  }
+  
+  # Calculate the monthly compounded fee
+  monthly_fee = monthly_fee_converter(annual_fee)
+  
+  # Adjusting returns for the monthly compounded fee
+  adjusted_returns = stock_returns - monthly_fee
+  
+  return(adjusted_returns)
+}
+
+```
+
 ### `libraries.R`
 
 ```r
+
 pacman::p_load(dplyr,
                ggplot2,
                tidyverse,
+               tidyr,
                stringr,
                tidytext,
                readxl,
