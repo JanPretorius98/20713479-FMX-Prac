@@ -77,7 +77,9 @@ This project is licensed under the MIT License, which is a highly permissive and
 
 ##  Question 1
 
-This question is stored in `WRITE-UPS`->`Question-1`. The following section explains step by step how the problem in question 1 was approached. This section also contains code chunks used in the creation of the write-up document.
+This question is stored in `WRITE-UPS`->`Question-1`. The presentation was drawn up using rmarkdown and beamer, in the file `Question-1-Presentation.Rmd`; while the knitted presentation is the file `Question-1-Presentation.pdf`. All code used to create the plots, and wrangle the data has been stored in the `code` folder, but also shown below.
+
+The following section explains step by step how the problem in question 1 was approached. This section also contains code chunks used in the creation of the write-up document.
 
 ### The folllowing questions guide the analysis:
 
