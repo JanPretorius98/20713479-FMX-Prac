@@ -2,6 +2,9 @@
 
 This repository contains the materials for the Financial Econometrics 871 practical test, including datasets, utility scripts for analysis, and documentation templates for questions and presentations.
 
+##  Internal Note/To Do:
+- Fix presentation notes of Question 1 (specifically the boxplots)
+
 ##  Note on question documentation:
 
 Documentation for questions will follow this general format:
