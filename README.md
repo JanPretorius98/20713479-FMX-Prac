@@ -182,7 +182,10 @@ print(tablestats[,1:7])
 ```r
 
 # Calculate the median for the AI fund
+
 ai_median <- median(Rets_wide$`AI Implementer`, na.rm = TRUE)
+
+# Create the boxplot
 
 boxplot <- Rets_long %>% 
     ggplot(aes(x = Fund, y = Returns, fill = Fund)) +
@@ -205,6 +208,7 @@ ggsave("Figures/boxplot.png", plot = boxplot)
 ```r
 
 # Create the scatter plot
+
 scatplot <- Funds_all %>% 
     ggplot(aes(x = Benchmark, y = Returns, color = Fund)) +
         geom_point(size = 1) +  # Add points
@@ -223,7 +227,10 @@ ggsave("Figures/scatplot.png", plot = scatplot)
 ```
 
 
-```{r cumplot}
+```r
+
+# Create the cumulative returns plot
+
 cumplot <- Rets_long_cum %>% 
     #filter(Fund == "Active Avg" | Fund == "AI Implementer" | Fund == "Benchmark") %>% 
     ggplot(aes(x = date, y = Cumulative_Returns, color = Fund)) +
