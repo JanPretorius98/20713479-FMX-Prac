@@ -97,7 +97,7 @@ This question is stored in `WRITE-UPS`->`Question-1`. The following section expl
 - I prefer working with one aggregate data set (easier for plotting and analysis). The main merged data frame is referred to as Rets_ ("Returns"). I also merged all the data both in long (Rets_long) and wide (Rets_merged) format, depending on the need.
 - I later realised that I wanted to produce a scatter plot, which required additional data operations and allows me to compare all the actively managed funds with the AI and benchmark. This new data set was saved as Funds_all (that is, all the AI and actively managed funds, compared to the Benchmark)
 
-```{r data_operations}
+```r
 
 set.seed(123321)
 sample_size = 4
@@ -167,7 +167,7 @@ Funds_all <- bind_rows(merge_AI, merge_ASISA)
 
 #### Data Inspection:
 
-```{r inspect}
+```r
 
 # Basic data inspection
 tablestats <-
@@ -179,7 +179,7 @@ print(tablestats[,1:7])
 
 #### Plotting:
 
-```{r boxplot}
+```r
 
 # Calculate the median for the AI fund
 ai_median <- median(Rets_wide$`AI Implementer`, na.rm = TRUE)
@@ -202,7 +202,7 @@ ggsave("Figures/boxplot.png", plot = boxplot)
 
 ```
 
-```{r scatplot}
+```r
 
 # Create the scatter plot
 scatplot <- Funds_all %>% 
