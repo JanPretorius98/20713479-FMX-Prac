@@ -110,10 +110,14 @@ Contains all data files for the practical.
 ### `UTILITIES`:
 This folder houses external scripts that enhance functionality.
   - `aesthetics.R`: Provides a standardised plotting theme.
-  - `libraries.R`: Loads all necessary libraries and packages for the project via pacman.
+  - `calc-portfolio-ret.R`: Function that calculates portfolio returns by reweighting
   - `capping.R`: Provides the `Proportional_Cap_Foo` function
-  - `missing-values.R`: Provides the `impute_missing_returns` function
-  - `fee-converter.R`: Provides the `fee_converter` function
+  - `fee_converter.R`: Adjusts stock returns for a given annual fee by converting it into a monthly compounded fee and subtracting it from the returns.
+  - `libraries.R`: Loads all necessary libraries and packages for the project via pacman.
+  - `missing-values.R`: Provides the `impute_missing_returns` function.
+  - `optim-foo-adj.R`: Uses quadratic programming to find the optimal weights for a portfolio based on expected returns, covariance, and constraints, returning the results as a table.
+  - `optimise.R`:Optimizes portfolio weights based on input parameters such as expected returns and constraints. It handles errors and returns optimal weights for assets, considering various optimization types.
+  - `roll-optimiser.R`: Optimizes portfolio weights using a rolling window approach, calculating optimal weights based on historical data and constraints. It returns the optimal weights for each rolling period.
 
 ### `WRITE-UPS`:
 Stores all write-ups and documentation for questions.
