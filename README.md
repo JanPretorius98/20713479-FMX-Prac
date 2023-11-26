@@ -70,6 +70,38 @@ if (!requireNamespace("pacman", quietly = TRUE)) {
 
 ---
 
+## Introductory Code
+
+Each question starts with a setup chunk similar to this sample code below from Question 3:
+
+```r
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 6, fig.height = 5, fig.pos="H", fig.pos = 'H')
+
+    #   Housekeeping
+rm(list = ls())
+options(scipen = 999)
+path <- "/Users/janhendrikpretorius/Library/CloudStorage/OneDrive-StellenboschUniversity/01-Masters-2023/02 Financial Econometrics/20713479-FMX-Prac/"
+
+    #   Get external scripts
+source(paste0(path, "UTILITIES/libraries.R")) #   Load libraries
+source(paste0(path, "UTILITIES/aesthetics.R")) #  Get plot themes
+source(paste0(path, "UTILITIES/missing-values.R")) #  Get imputing function
+source(paste0(path, "UTILITIES/capping.R")) #  Capping functions
+
+
+    #   Load Data
+file <- "ALSI.rds"
+ALSI <- read_rds(paste0(path, "DATA/", file))
+
+file <- "Rebalance_days.rds"
+RebDays <- read_rds(paste0(path, "DATA/", file))
+
+file <- "Monthly_zar.rds"
+ZAR <- read_rds(paste0(path, "DATA/", file))
+
+```
+---
+
 ## Project Organization
 
 ### `DATA`:
@@ -583,16 +615,295 @@ This question is stored in `WRITE-UPS`->`Question-3`. The following section expl
 
 2. **Rebalancing Effects and Market Dynamics**: What is the impact of rebalancing days on the ALSI and SWIX indexes? Are there correlations with market volatility and currency performance?
 
-3. **Capping Levels and Index Performance**: What are the effects of different capping levels (5%, 10%, uncapped) on the diversification and performance of the ALSI and SWIX indexes?
+3. **Capping Levels and Index Performance**: What are the effects of different capping levels on the diversification and performance of the ALSI and SWIX indexes?
 
 ### Code:
 
+1. **Data Handling:**
+   - We load ALSI, rebalance days (RebDays), and ZAR exchange rate (ZAR) data.
+   - Data is cleaned, and weighted returns are calculated for ALSI with J203 and J403.
+
+2. **Analysis and Visualization:**
+   - Monthly returns are calculated for ALSI and adjusted for currency (ZAR) fluctuations.
+   - Rolling returns, cumulative returns, and sector exposures are visualized.
+   - Correlation analysis between ALSI returns and ZAR exchange rates is performed.
+
+3. **Capping Analysis (Unfinished):**
+   - The code prepares data for analyzing capping effects on ALSI indexes but is unfinished.
+
+Key Dataframes:
+- `ALSI`: ALSI index data.
+- `RebDays`: Rebalance day information.
+- `ZAR`: ZAR exchange rate data.
+- `ALSI_J203` and `ALSI_J403`: Dataframes for ALSI indexes.
+
+Feel free to use this shortened explanation in your readme section.
 
 #### Data operations:
+```r
+
+# Define window size
+window_size <- 252  # Approximately one trading year
+
+ALSI <- ALSI %>% 
+  mutate(Index_Name = ifelse(is.na(Index_Name), "Small_Caps", Index_Name))
+
+# Replace NA in J403 for specific tickers
+ALSI <- ALSI %>%
+  mutate(J403 = case_when(
+    Tickers == "HPB" & is.na(J403) ~ 0.000046,   # Replace NA for HPB
+    Tickers == "ROC" & is.na(J403) ~ 0.0023,     # Replace NA for ROC
+    TRUE ~ J403                                  # Keep other values as is
+  ))
+
+# Calculate weighted returns for ALSI and SWIX
+ALSI <- ALSI %>% 
+  mutate(WeightedReturn_J203 = Return * J203,
+         WeightedReturn_J403 = Return * J403)
 
 
+# Filter rows where Index_Name is NA and select unique tickers
+tickers_with_na <- ALSI %>%
+  filter(is.na(Index_Name)) %>%
+  distinct(Tickers)
+
+# Sum up weighted returns by size index and date for J203
+ALSI_J203 <- ALSI %>% 
+  group_by(date, Index_Name) %>% 
+  summarize(WeightedReturn = sum(WeightedReturn_J203))
+
+# Sum up weighted returns by size index and date for J403
+ALSI_J403 <- ALSI %>% 
+  group_by(date, Index_Name) %>% 
+  summarize(WeightedReturn = sum(WeightedReturn_J403))
+
+# Calculate cumulative and rolling returns for daily data
+ALSI_J203 <- ALSI_J203 %>%
+  group_by(Index_Name) %>%
+  arrange(date) %>%
+  mutate(CumulativeReturn = cumprod(1 + WeightedReturn)) %>%
+  mutate(RollingReturn = roll_prod(1 + WeightedReturn, 252, fill = NA, 
+                                    align = "right")^(252/252) - 1) %>%
+  filter(!is.na(RollingReturn)) %>%
+  ungroup() %>%
+  group_by(Index_Name) %>%
+  arrange(date, .by_group = TRUE) %>%
+  mutate(RollingVolatility = rollapply(WeightedReturn, width = window_size, FUN = sd, na.rm = TRUE, fill = NA, align = "right")) %>%
+  ungroup() %>%
+    group_by(Index_Name) %>% 
+    arrange(date) %>%
+    mutate(MaxCumulativeReturn = cummax(CumulativeReturn),
+           Drawdown = (-1) *(MaxCumulativeReturn - CumulativeReturn) / MaxCumulativeReturn) %>% 
+  ungroup()
+
+ALSI_J403 <- ALSI_J403 %>%
+  group_by(Index_Name) %>%
+  arrange(date) %>%
+  mutate(CumulativeReturn = cumprod(1 + WeightedReturn)) %>%
+  mutate(RollingReturn = roll_prod(1 + WeightedReturn, 252, fill = NA, 
+                                    align = "right")^(252/252) - 1) %>%
+  filter(!is.na(RollingReturn)) %>%
+  ungroup() %>%
+  group_by(Index_Name) %>%
+  arrange(date, .by_group = TRUE) %>%
+  mutate(RollingVolatility = rollapply(WeightedReturn, width = window_size, FUN = sd, na.rm = TRUE, fill = NA, align = "right")) %>%
+  ungroup() %>%
+    group_by(Index_Name) %>% 
+    arrange(date) %>%
+    mutate(MaxCumulativeReturn = cummax(CumulativeReturn),
+           Drawdown = (-1) * (MaxCumulativeReturn - CumulativeReturn) / MaxCumulativeReturn) %>% 
+  ungroup()
+
+ALSI_J203_long <- ALSI_J203 %>%
+  gather(key = "ReturnType", value = "Return", RollingReturn, CumulativeReturn, RollingVolatility, Drawdown)
+
+ALSI_J403_long <- ALSI_J403 %>%
+  gather(key = "ReturnType", value = "Return", RollingReturn, CumulativeReturn, RollingVolatility, Drawdown)
+
+# Sector exposure
+
+# Calculate sector weights for both J203 and J403
+sector_weights <- ALSI %>%
+  group_by(date, Sector) %>%
+  summarize(SectorWeight_J203 = sum(J203),
+            SectorWeight_J403 = sum(J403), .groups = 'drop') %>%
+  ungroup() %>%
+  pivot_longer(cols = c(SectorWeight_J203, SectorWeight_J403),
+               names_to = "Index",
+               values_to = "Weight")
+
+# Renaming for clarity
+sector_weights$Index <- gsub("SectorWeight_", "", sector_weights$Index)
+
+```
+
+```r
+
+ALSI_monthly <- ALSI %>%
+  group_by(date = floor_date(date, "month")) %>%
+  # Calculate cumulative returns for J203 and J403
+  mutate(CumulativeReturn_J203 = cumprod(1 + WeightedReturn_J203) - 1,
+         CumulativeReturn_J403 = cumprod(1 + WeightedReturn_J403) - 1) %>%
+  # Summarize and rename columns directly
+  summarize(MonthlyReturn_J203 = last(CumulativeReturn_J203, na.rm = TRUE),
+            MonthlyReturn_J403 = last(CumulativeReturn_J403, na.rm = TRUE),
+            .groups = 'drop')
+# Get ZAR ready
+zar_growth_rate <- ZAR %>%
+  arrange(date) %>%
+  mutate(ZARGrowth = (value / lag(value) - 1)) %>% 
+  select(-c(Tickers))  %>%
+  mutate(date = floor_date(date, "month")) %>% 
+  rename("ExchangeRate" = "value")
+
+ALSI_monthly <- ALSI_monthly %>%
+  left_join(zar_growth_rate, by = "date") %>%
+  group_by(date) %>%
+  arrange(date) %>%
+  mutate(CumulativeReturn_J203 = cumprod(1 + MonthlyReturn_J203)) %>%
+  mutate(CumulativeReturn_J403 = cumprod(1 + MonthlyReturn_J403))
+
+ALSI_monthly_long <- ALSI_monthly %>%
+  pivot_longer(cols = c(MonthlyReturn_J203, MonthlyReturn_J403, CumulativeReturn_J203, CumulativeReturn_J403, ExchangeRate, ZARGrowth),
+               names_to = "ReturnType",
+               values_to = "Return")
+```
+##### Capping (Unfinished Section)
+
+```r
+# Prepare the data:
+# get rebalancing days
+rebalance_days <- RebDays %>%
+  filter(Date_Type == "Reb Trade Day") %>%
+  pull(date)
+
+ALSI_J203 <- ALSI %>% 
+    select(-c(J403, WeightedReturn_J403))
+
+ALSI_J403 <- ALSI %>% 
+    select(-c(J203, WeightedReturn_J203))
+
+# Step 1: Calculate daily total weight per sector
+daily_sector_weight_J203 <- ALSI_J203 %>%
+  group_by(date, Sector) %>%
+  summarize(DailyTotalWeight = sum(J203, na.rm = TRUE), .groups = 'drop')
+
+# Step 2: Calculate the average of daily totals over the entire period
+average_sector_weight_J203 <- daily_sector_weight_J203 %>%
+  group_by(Sector) %>%
+  summarize(AverageWeight = mean(DailyTotalWeight, na.rm = TRUE), .groups = 'drop')
+
+ALSI_J203_industry_returns <- ALSI_J203 %>%
+  group_by(date, Sector) %>%
+  summarize(TotalWeight = sum(J203, na.rm = TRUE),
+            SumWeightedReturns = sum(WeightedReturn_J203, na.rm = TRUE),
+            RealizedReturn = SumWeightedReturns / TotalWeight,
+            AverageUnweightedReturn = mean(Return, na.rm = TRUE),
+            .groups = 'drop')
+
+sector_caps <- c("Financials" = 0.20, "Industrials" = 0.40, "Property" = 0.05, "Resources" = 0.35)
+
+ALSI_J203_capped <- apply_industry_caps(ALSI_J203_industry_returns, sector_caps, rebalance_days)
+
+# Calculate total daily rebalanced return for the index
+total_daily_rebalanced_returns <- ALSI_J203_capped %>%
+  group_by(date) %>%
+  summarize(TotalRebalancedReturn = sum(AdjustedWeight * RealizedReturn, na.rm = TRUE),
+            .groups = 'drop')
+
+# Calculate cumulative returns
+cumulative_returns <- total_daily_rebalanced_returns %>%
+  mutate(BalancedCumulativeReturn = cumprod(1 + TotalRebalancedReturn))
+
+
+# Calculate daily total weighted returns for J203
+daily_total_weighted_returns_J203 <- ALSI %>%
+  group_by(date) %>%
+  summarize(DailyTotalWeightedReturn = sum(WeightedReturn_J203, na.rm = TRUE),
+            .groups = 'drop')
+
+# Calculate cumulative returns
+cumulative_returns_J203 <- daily_total_weighted_returns_J203 %>%
+  mutate(CumulativeReturn_J203 = cumprod(1 + DailyTotalWeightedReturn))
+
+# Merge with cumulative_rebalanced_returns
+cumulative_returns <- cumulative_returns %>%
+  left_join(cumulative_returns_J203, by = "date")
+
+```
 #### Plotting:
 
+```r
+ALSI_J203_long %>% 
+    ggplot(aes(x = date, y = Return, color = Index_Name)) +
+      geom_line() +
+      labs(title = "ALSI J203 Returns",
+           caption = "Rolling returns calculated as one-year rolling returns (Ann.).",
+           x = "Date", 
+           y = "Returns") +
+      th +
+      scale_color_manual(values = palette) +
+      facet_wrap(~ReturnType, scales = "free_y", ncol = 2)
+
+
+```
+
+```r
+
+ALSI_J403_long %>% 
+    ggplot(aes(x = date, y = Return, color = Index_Name)) +
+      geom_line() +
+      labs(title = "ALSI J403 Returns",
+           caption = "Rolling returns calculated as one-year rolling returns (Ann.).",
+           x = "Date", 
+           y = "Returns") +
+      th +
+      scale_color_manual(values = palette) +
+      facet_wrap(~ReturnType, scales = "free_y", ncol = 2)
+
+
+```
+
+```r
+
+sector_weights %>% 
+    ggplot(aes(x = date, y = Weight, fill = Sector)) +
+      geom_bar(stat = "identity", position = "stack") +
+      facet_wrap(~Index, scales = "free_x", ncol = 1) +
+      labs(title = "Sector Weights Over Time for J203 and J403",
+           x = "Date", y = "Weight") +
+      th +
+      scale_fill_manual(values = palette)
+
+```
+
+```r
+
+# Correlation analysis
+
+cor_J203 = cor(ALSI_monthly$MonthlyReturn_J203, ALSI_monthly$ExchangeRate)
+cor_J403 = cor(ALSI_monthly$MonthlyReturn_J403, ALSI_monthly$ExchangeRate)
+
+cor_J203 <- round(cor_J203, 2)
+cor_J403 <- round(cor_J403, 2)
+
+# Create a data frame for the gt table
+cor_df = data.frame(
+  Index = c("J203", "J403"),
+  Correlation_with_ExchangeRate = c(cor_J203, cor_J403)
+)
+
+# Create a gt table
+gt(cor_df) %>%
+  tab_header(
+    title = "Correlation with Exchange Rate"
+  ) %>%
+  cols_label(
+    Index = "Index",
+    Correlation_with_ExchangeRate = "Correlation with Exchange Rate"
+  )
+
+```
 
 
 ### Some pitfalls along the way:
