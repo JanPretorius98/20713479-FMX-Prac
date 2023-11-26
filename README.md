@@ -1247,6 +1247,88 @@ th <- theme(
 )
 
 ```
+### `calc-portfolio-ret.R`
+
+```r
+# Goal: Calculate portfolio return by reweigthing
+
+path <- "/Users/janhendrikpretorius/Library/CloudStorage/OneDrive-StellenboschUniversity/01-Masters-2023/02 Financial Econometrics/20713479-FMX-Prac/"
+source(paste0(path, "UTILITIES/libraries.R")) #   Load libraries
+
+calculatePortfolioReturns <- function(Indexes, RebMonths) {
+    # Convert to long format
+    Indexes_long <- Indexes %>%
+        gather(key = "Index", value = "Return", -date)
+
+    # Make a weighting dataframe
+    Weights <- Indexes_long %>%
+        mutate(
+            Weight = ifelse(Index %in% c("MSCI_ACWI", "J433"), 0.6, 0.4) *
+                ifelse(Index %in% c("J433", "ALBI"), 0.7, 0.3)
+        ) %>%
+        mutate(Months = as.numeric(format(date, format = "%m")),
+               YearMonths = as.numeric(format(date, format = "%Y%m"))) %>%
+        filter(Months %in% RebMonths) %>%
+        group_by(YearMonths, Months, Index) %>% filter(date == last(date)) %>% ungroup() %>%
+        select(-c(Months, YearMonths))
+
+    # Assume an initial R1000 investment
+    Fund_Size_at_Start <- 1000
+
+    # Step 2: Calculate Portfolio Returns
+
+    EW_weights <- Weights %>%
+        select(date, Index, Weight) %>%
+        spread(Index, Weight) %>%
+        tbl_xts()
+
+    Indexes[is.na(Indexes)] <- 0
+    xts_Indexes <- Indexes %>% tbl_xts()
+
+    EW_RetPort <-
+        rmsfuns::Safe_Return.portfolio(xts_Indexes,
+                                       weights = EW_weights, lag_weights = TRUE,
+                                       verbose = TRUE, contribution = TRUE,
+                                       value = Fund_Size_at_Start, geometric = TRUE)
+
+    # Clean and save portfolio returns and weights:
+    EW_Contribution <-
+        EW_RetPort$"contribution" %>% xts_tbl()
+
+    EW_BPWeight <-
+        EW_RetPort$"BOP.Weight" %>% xts_tbl()
+
+    EW_BPValue <-
+        EW_RetPort$"BOP.Value" %>% xts_tbl()
+
+    names(EW_Contribution) <- c("date", names(EW_RetPort$"contribution"))
+    names(EW_BPWeight) <- c("date", names(EW_RetPort$"BOP.Weight"))
+    names(EW_BPValue) <- c("date", names(EW_RetPort$"BOP.Value"))
+
+    # Bind dataframes together
+    df_port_return_EW <-
+        left_join(Indexes_long %>% rename("date" = date),
+                  EW_BPWeight %>% gather(Index, Weight, -date),
+                  by = c("date", "Index") ) %>%
+
+        left_join(.,
+                  EW_BPValue %>% gather(Index, value_held, -date),
+                  by = c("date", "Index") ) %>%
+
+        left_join(.,
+                  EW_Contribution %>% gather(Index, Contribution, -date),
+                  by = c("date", "Index"))
+
+    # Calculate Portfolio Returns:
+    Return <-
+        df_port_return_EW %>% group_by(date) %>% summarise(PortfolioReturn = sum(Return*Weight, na.rm =TRUE)) %>%
+        filter(PortfolioReturn != 0)
+
+    # Return the final dataframe
+    return(Return)
+}
+
+```
 
 ### `capping.R`
 
@@ -1418,8 +1500,89 @@ impute_missing_returns <- function(return_mat, impute_returns_method = "NONE"){
 
 
 ```
+### `optim-foo-adj.R`
 
+```r
 
+optim_foo_adj <- function(Mu, Sigma, LB, UB, Amat, bvec, meq){
+  
+  w.opt <-
+    quadprog::solve.QP(Dmat = Sigma,
+                       dvec = Mu,
+                       Amat = Amat,
+                       bvec = bvec,
+                       meq = meq)$solution
+  
+  result.QP <- tibble(stocks = colnames(Sigma), weight = w.opt)
+  result.QP
+}
+
+```
+
+### `optimise.R`
+
+```r
+# Goal optimise portfolio
+
+optim_foo <- function(Type = "mv", mu, Sigma, LB, UB, printmsg = TRUE){
+  
+  Safe_Optim <- purrr::safely(RiskPortfolios::optimalPortfolio)
+  
+  Opt_W <- 
+    Safe_Optim(mu = mu, Sigma = Sigma, 
+               control = list(type = Type, constraint = 'user', 
+                              LB = rep(LB, ncol(Sigma)), 
+                              UB = rep(UB, ncol(Sigma))))
+  
+  if( is.null(Opt_W$error)){
+    
+    optimw <- 
+      tibble(Tickers = colnames(Sigma), weights = Opt_W$result) %>% 
+      # Take note:
+      rename(!!Type := weights)
+    
+    if(printmsg)   optimw <- optimw %>% mutate(Result = glue::glue("Converged: {Type}"))
+    
+  } else {
+    
+    optimw <- tibble(Tickers = colnames(Sigma), weights = 1/ncol(Sigma)) %>% 
+      # Take note:
+      rename(!!Type := weights)
+    
+    
+    if(printmsg)   optimw <- optimw %>% mutate(Result = glue::glue("Failed to Converge: {Type}"))
+    
+  }
+  optimw
+}
+
+```
+
+### `roll-optimiser.R`
+
+```r
+
+Roll_optimizer <- function(return_mat, EOQ_datevec, LookBackSel = 36){
+  
+  return_df_used <- return_mat %>% filter(date >= EOQ_datevec %m-% months(LookBackSel))
+  
+  if(return_df_used %>% nrow() < LookBackSel) return(NULL) 
+  
+  return_mat_Nodate <- data.matrix(return_df_used[, -1])
+  # Simple Sample covariance and mean for the lookback period:
+  Sigma <- RiskPortfolios::covEstimation(return_mat_Nodate)
+  Mu <- return_mat %>% summarise(across(-date, ~prod(1+.)^(1/n())-1)) %>% purrr::as_vector()
+  
+  
+  My_Weights <-
+    
+    optim_foo_adj(Mu, Sigma, LB, UB, Amat, bvec, meq) %>%
+    
+    mutate(date = EOQ_datevec , Look_Back_Period = LookBackSel)
+  
+}
+
+```
 ---
 
 ## Documentation
