@@ -289,9 +289,24 @@ This question is stored in `WRITE-UPS`->`Question-2`. The following section expl
 
 ### The folllowing questions guide the analysis:
 
-1. **Impact on Returns:** What is the impact of currency hedging on the long-term returns of the portfolio? Does hedging enhance or diminish overall returns?
-2. **Volatility Comparison:** How does the rolling realized volatility of a fully hedged portfolio compare to an unhedged portfolio over time? 
-3. **Correlation Analysis:** How does the correlation between the South African Rand (ZAR) and global assets (like MSCI ACWI and Global Bond Aggregate) influence the portfolio's performance?
+1. **How do Hedged and Unhedged Portfolios Compare in Terms of Cumulative Returns?**
+   - This question aims to understand the overall performance of hedged versus unhedged portfolios over time. The cumulative returns plot helps in visualizing which strategy outperforms the other over the study period.
+
+2. **What is the Impact of Currency Hedging on Rolling Returns?**
+   - By examining 3-year rolling returns, the analysis seeks to determine how currency hedging influences the stability and consistency of returns over different market conditions.
+
+3. **How Does Currency Movement Affect Portfolio Returns in USD Terms?**
+   - This aspect of the analysis focuses on the relationship between USD-ZAR currency movements and the performance of portfolios when converted to USD. It aims to understand the risk and return dynamics from a currency perspective.
+
+4. **What is the Downside Risk Associated with Hedged and Unhedged Portfolios?**
+   - The analysis here is geared towards understanding the risks involved in both strategies, especially focusing on the downside risks and how they differ between the hedged and unhedged portfolios.
+
+5. **How do Hedged and Unhedged Portfolios Compare in Terms of Rolling Volatility?**
+   - This question delves into the volatility aspect of the portfolios. It examines whether hedging reduces the variability of returns over time and how significant this reduction is.
+
+6. **What are the Distributions of Rolling Volatility for Hedged and Unhedged Portfolios?**
+   - By creating histograms and violin plots, the analysis aims to explore the distribution and range of volatilities for both portfolio structures, giving insights into their risk profiles.
+
 
 ### Approach:
 
