@@ -1681,3 +1681,5 @@ Links to further documentation, if available.
 - Nico Katzke
   - `Proportional_Cap_Foo` function
   - `impute_missing_returns` function
+  - `roll-optimiser` function
+  - `capping` function
