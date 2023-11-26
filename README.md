@@ -341,12 +341,229 @@ To replicate the study and compare a hedged and unhedged portfolio, we'll need t
 
 ### Code:
 
+1. **Data Loading**: Imported data from `Cncy_Hedge_Assets.rds` and `Monthly_zar.rds`, standardizing date formats for consistency.
+
+2. **Currency Conversion**: Adjusted portfolio returns based on USD-ZAR exchange rates to analyze both hedged and unhedged portfolios in USD terms.
+
+3. **Portfolio Returns Calculation**: Used custom functions to calculate returns for both portfolio types across different rebalancing periods.
+
+4. **Performance Analysis**: Computed and plotted cumulative and rolling returns to compare portfolio performance over time.
+
+5. **Exchange Rate Impact Assessment**: Analyzed the relationship between USD-ZAR exchange rate movements and USD portfolio returns.
+
+6. **Risk Metrics Calculation**: Evaluated downside risks of both portfolio types to understand their risk profiles.
+
+7. **Volatility Analysis**: Calculated and visualized rolling volatility, comparing volatility distributions of hedged and unhedged portfolios.
 
 #### Data operations:
 
+```r
+
+RebMonths <- c(3, 6, 9, 12) # Rebalancing periods
+
+# Convert the date format to Year-Month for both dataframes
+Indexes <- Indexes %>% 
+  mutate(date = floor_date(as.Date(date), "month"))
+
+ZAR <- ZAR %>% 
+  mutate(date = floor_date(as.Date(date), "month"))
+
+# Note on calculatePortfolioReturns():
+    # Need a wide format dataframe with a date column and returns only!
+    # It is a very situational specific function and not very general
+
+# Calculate returns of unhedged portfolio
+Unhedged_portf <- calculatePortfolioReturns(Indexes, RebMonths) %>% 
+    mutate(Structure = "Unhedged")
+
+# Calculate returns of hedged portfolio
+
+# Align dates and compute growth rate of ZAR to USD exchange rate
+ZAR <- ZAR %>% mutate(ExchangeRateGrowth = (value / lag(value)) - 1)
+
+# Adjust returns in Indexes by exchange rate appreciation/depreciation
+Indexes_adjusted <- Indexes %>%
+  mutate(date = as.Date(date)) %>%
+  left_join(ZAR %>% select(date, ExchangeRateGrowth), by = "date") %>%
+  mutate_at(vars(J433, ALBI), ~ . * (1 + ExchangeRateGrowth)) %>% # Inflate Rand-denominated indexes
+  mutate_at(vars(MSCI_ACWI, Bbg_Agg), ~ . / (1 + ExchangeRateGrowth)) %>% # Deflate Dollar-denominated indexes
+  select(-c(ExchangeRateGrowth))
+
+Hedged_portf <- calculatePortfolioReturns(Indexes_adjusted, RebMonths) %>% 
+    mutate(Structure = "Hedged")
+
+# Merge the unhedged and hedged portfolio returns
+combined_portfolio <- bind_rows(Unhedged_portf, Hedged_portf)
+
+# Calculate cumulative and rolling returns
+combined_portfolio <- combined_portfolio %>%
+  group_by(Structure) %>%
+  arrange(date) %>%
+  mutate(CumulativeReturn = cumprod(1 + PortfolioReturn)) %>%
+  mutate(RollRets = RcppRoll::roll_prod(1 + PortfolioReturn, 36, fill = NA, 
+  align = "right")^(12/36) - 1) %>% 
+  group_by(date) %>% filter(any(!is.na(RollRets))) %>% 
+  ungroup()
+
+```
 
 #### Plotting:
 
+```r
+
+# Plot the cumulative returns
+combined_portfolio %>% 
+ggplot(aes(x = date, y = CumulativeReturn, color = Structure)) +
+  geom_line() +
+  th +
+  labs(title = "Cumulative Portfolio Returns: Hedged vs Unhedged",
+       x = "Date",
+       y = "Cumulative Return",
+       color = "Structure") +
+  scale_color_manual(values = palette)
+
+```
+
+
+
+```r
+
+# Plot the rolling returns
+combined_portfolio %>% 
+ggplot(aes(x = date, y = RollRets, color = Structure)) +
+  geom_line() +
+  th +
+  labs(title = "3-Year Rolling Returns: Hedged vs Unhedged",
+       x = "Date",
+       y = "Rolling 3 year Returns (Ann.)",
+       color = "Structure") +
+  scale_color_manual(values = palette)
+
+```
+
+```r
+
+# Convert returns to USD-returns
+Indexes_USD <- Indexes %>%
+  mutate(date = as.Date(date)) %>%
+  left_join(ZAR %>% select(date, ExchangeRateGrowth), by = "date") %>%
+  mutate_at(vars(J433, ALBI), ~ . / (1 + ExchangeRateGrowth)) %>% 
+  select(-c(ExchangeRateGrowth))
+
+USD_portf <- calculatePortfolioReturns(Indexes_adjusted, RebMonths) %>% 
+    mutate(Hedged = "Yes")
+
+scatter_data <- USD_portf %>%
+  left_join(ZAR %>% select(date, ExchangeRateGrowth), by = "date") %>%
+  rename(USD_ZAR_Returns = ExchangeRateGrowth,
+         Portfolio_Returns_USD = PortfolioReturn) %>%
+  select(date, USD_ZAR_Returns, Portfolio_Returns_USD)
+
+# Create the scatter plot
+p <- scatter_data %>% 
+        ggplot(aes(x = USD_ZAR_Returns, y = Portfolio_Returns_USD)) +
+            geom_point(color = "#D98515", alpha=0.6) +
+            geom_smooth(method = "lm", color = "darkgrey", se=FALSE) +
+            scale_x_continuous(labels = scales::percent_format(scale = 100), limits = c(-0.15, 0.15)) +
+            scale_y_continuous(labels = scales::percent_format(scale = 100), limits = c(-0.15, 0.15)) +
+            geom_hline(yintercept = 0, linetype = "dashed", color = "darkgrey") +
+            geom_vline(xintercept = 0, linetype = "dashed", color = "darkgrey") +
+            th +
+            labs(x = "USD-ZAR Returns", 
+                 y = "Portfolio Returns (USD)", 
+                 title = "Scatter Plot with Marginal Distributions",
+                 caption = "Calculations from 28 February 2002 - 31 August 2023")
+
+# Add marginal histograms
+p <- ggExtra::ggMarginal(p, type = "density", fill = "#1E3364", alpha = 0.6)
+
+print(p)
+```
+
+
+# Next create the downside risk table from Prac 2
+
+```r
+
+# Separate hedged and unhedged data
+df_hedged <- combined_portfolio %>% filter(Structure == "Hedged") %>% select(date, PortfolioReturn)
+df_unhedged <- combined_portfolio %>% filter(Structure == "Unhedged") %>% select(date, PortfolioReturn)
+
+# Rename columns to match the example structure
+df_hedged <- df_hedged %>% rename(Hedged = PortfolioReturn)
+df_unhedged <- df_unhedged %>% rename(Unhedged = PortfolioReturn)
+
+# Calculate Downside Risk
+tabdownside <- table.DownsideRisk(left_join(df_unhedged, df_hedged, by = "date") %>% tbl_xts(.), 
+                                  ci = 0.95, Rf = 0, MAR = 0)
+
+# Select specific rows
+tabdownside <- tabdownside[c(1,5,7,8:11),]
+
+# Format and display the table
+tabdownside %>% 
+  data.frame() %>% 
+  tibble::rownames_to_column() %>% 
+  gt() %>% 
+  tab_header(title = glue("Downside Risk Estimates")) %>% 
+  fmt_percent(columns = 2:3, decimals = 2)
+
+
+
+```
+
+```r
+
+# Calculate 30-day rolling volatility
+combined_portfolio <- combined_portfolio %>%
+    group_by(Structure) %>%
+    arrange(date, .by_group = TRUE) %>%
+    mutate(RollingVolatility = rollapply(PortfolioReturn, width = 36, FUN = sd, na.rm = TRUE, fill = NA, align = "right"))
+
+# Plotting
+ggplot(combined_portfolio, aes(x = date, y = RollingVolatility, color = Structure)) +
+    geom_line() +
+    scale_color_manual(values = palette) +
+    labs(title = "36-month Rolling Volatility",
+         x = "Date",
+         y = "Volatility (Standard Deviation)",
+         color = "Structure") +
+    th
+
+
+```
+
+```r
+
+volatility_data <- combined_portfolio %>%
+  filter(!is.na(RollingVolatility))
+
+# Create a histogram of the rolling volatility
+ggplot(volatility_data, aes(x = RollingVolatility, fill = Structure)) +
+  geom_histogram(position = "identity", alpha = 0.6, bins = 30, colour = "black", size = 0.3) +
+  labs(title = "Histogram of 36-Month Rolling Volatility",
+       x = "Rolling Volatility (Standard Deviation)",
+       y = "Frequency") +
+  scale_fill_manual(values = palette) +
+  th
+
+```
+
+
+```r
+
+# Create a box plot of the rolling volatility
+ggplot(volatility_data, aes(x = Structure, y = RollingVolatility, fill = Structure, color = Structure)) +
+  geom_violin(alpha = 0.6) +
+  geom_jitter() +
+  labs(title = "Violin Plot of 36-Month Rolling Volatility",
+       x = "Portfolio Structure",
+       y = "Rolling Volatility (Standard Deviation)") +
+  scale_fill_manual(values = palette) +
+  scale_color_manual(values = palette) +
+  th
+
+```
 
 
 ### Some pitfalls along the way:
