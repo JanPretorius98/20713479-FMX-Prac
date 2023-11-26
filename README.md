@@ -34,14 +34,30 @@ Documentation for questions will follow this general format:
 ---
 ##  Installation
 
-The project makes use of the following packages, that can be loaded with the external script `libraries.R` (see `UTILITIES` below):
-- dplyr
-- ggplot2
-- tidyverse
-- stringr
-- tidytext
-- readxl
-- xtable
+The project makes use of the following packages, which can be loaded with the external script `libraries.R` (see UTILITIES below):
+
+- `dplyr`
+- `ggplot2`
+- `tidyverse`
+- `tidyr`
+- `stringr`
+- `tidytext`
+- `glue`
+- `readxl`
+- `xtable`
+- `PerformanceAnalytics`
+- `RcppRoll`
+- `tbl2xts`
+- `lubridate`
+- `gt`
+- `rmsfuns`
+- `RiskPortfolios`
+- `fitHeavyTail`
+- `rportfolios`
+- `ggExtra`
+- `reshape2`
+- `GGally`
+- `rmgarch`
 
 These libraries are loaded using the pacman package, which offers a more convenient way to load R packages, installing them if necessary. Ensure that pacman is installed on your machine by running the following code in R:
 
