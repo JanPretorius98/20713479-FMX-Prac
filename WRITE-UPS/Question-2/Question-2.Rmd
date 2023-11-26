@@ -100,7 +100,7 @@ ZAR <- ZAR %>%
 
 # Calculate returns of unhedged portfolio
 Unhedged_portf <- calculatePortfolioReturns(Indexes, RebMonths) %>% 
-    mutate(Hedged = "No")
+    mutate(Structure = "Unhedged")
 
 # Calculate returns of hedged portfolio
 
@@ -111,38 +111,61 @@ ZAR <- ZAR %>% mutate(ExchangeRateGrowth = (value / lag(value)) - 1)
 Indexes_adjusted <- Indexes %>%
   mutate(date = as.Date(date)) %>%
   left_join(ZAR %>% select(date, ExchangeRateGrowth), by = "date") %>%
-  mutate_at(vars(J433, ALBI), ~ . * (1 + ExchangeRateGrowth)) %>% 
+  mutate_at(vars(J433, ALBI), ~ . * (1 + ExchangeRateGrowth)) %>% # Inflate Rand-denominated indexes
+  mutate_at(vars(MSCI_ACWI, Bbg_Agg), ~ . / (1 + ExchangeRateGrowth)) %>% # Deflate Dollar-denominated indexes
   select(-c(ExchangeRateGrowth))
 
 Hedged_portf <- calculatePortfolioReturns(Indexes_adjusted, RebMonths) %>% 
-    mutate(Hedged = "Yes")
+    mutate(Structure = "Hedged")
 
 # Merge the unhedged and hedged portfolio returns
 combined_portfolio <- bind_rows(Unhedged_portf, Hedged_portf)
 
-# Calculate cumulative returns
+# Calculate cumulative and rolling returns
 combined_portfolio <- combined_portfolio %>%
-  group_by(Hedged) %>%
+  group_by(Structure) %>%
   arrange(date) %>%
   mutate(CumulativeReturn = cumprod(1 + PortfolioReturn)) %>%
+  mutate(RollRets = RcppRoll::roll_prod(1 + PortfolioReturn, 36, fill = NA, 
+  align = "right")^(12/36) - 1) %>% 
+  group_by(date) %>% filter(any(!is.na(RollRets))) %>% 
   ungroup()
 
 ```
 
-```{r}
+
+```{r cumrets}
 
 # Plot the cumulative returns
-ggplot(combined_portfolio, aes(x = date, y = CumulativeReturn, color = Hedged)) +
+combined_portfolio %>% 
+ggplot(aes(x = date, y = CumulativeReturn, color = Structure)) +
   geom_line() +
   th +
   labs(title = "Cumulative Portfolio Returns: Hedged vs Unhedged",
        x = "Date",
        y = "Cumulative Return",
-       color = "Hedged Against Currency") +
+       color = "Structure") +
   scale_color_manual(values = palette)
 
+```
+
+
+
+```{r rollrets}
+
+# Plot the rolling returns
+combined_portfolio %>% 
+ggplot(aes(x = date, y = RollRets, color = Structure)) +
+  geom_line() +
+  th +
+  labs(title = "3-Year Rolling Returns: Hedged vs Unhedged",
+       x = "Date",
+       y = "Rolling 3 year Returns (Ann.)",
+       color = "Structure") +
+  scale_color_manual(values = palette)
 
 ```
+
 
 ```{r scatterplot, fig.width=7, fig.height=4}
 
@@ -189,8 +212,8 @@ print(p)
 ```{r}
 
 # Separate hedged and unhedged data
-df_hedged <- combined_portfolio %>% filter(Hedged == "Yes") %>% select(date, PortfolioReturn)
-df_unhedged <- combined_portfolio %>% filter(Hedged == "No") %>% select(date, PortfolioReturn)
+df_hedged <- combined_portfolio %>% filter(Structure == "Hedged") %>% select(date, PortfolioReturn)
+df_unhedged <- combined_portfolio %>% filter(Structure == "Unhedged") %>% select(date, PortfolioReturn)
 
 # Rename columns to match the example structure
 df_hedged <- df_hedged %>% rename(Hedged = PortfolioReturn)
@@ -215,5 +238,58 @@ tabdownside %>%
 
 ```
 
-# Volatility Modelling?
+# Volatility
+
+```{r}
+
+# Calculate 30-day rolling volatility
+combined_portfolio <- combined_portfolio %>%
+    group_by(Structure) %>%
+    arrange(date, .by_group = TRUE) %>%
+    mutate(RollingVolatility = rollapply(PortfolioReturn, width = 36, FUN = sd, na.rm = TRUE, fill = NA, align = "right"))
+
+# Plotting
+ggplot(combined_portfolio, aes(x = date, y = RollingVolatility, color = Structure)) +
+    geom_line() +
+    scale_color_manual(values = palette) +
+    labs(title = "36-month Rolling Volatility",
+         x = "Date",
+         y = "Volatility (Standard Deviation)",
+         color = "Structure") +
+    th
+
+
+```
+
+```{r histogram}
+
+volatility_data <- combined_portfolio %>%
+  filter(!is.na(RollingVolatility))
+
+# Create a histogram of the rolling volatility
+ggplot(volatility_data, aes(x = RollingVolatility, fill = Structure)) +
+  geom_histogram(position = "identity", alpha = 0.6, bins = 30, colour = "black", size = 0.3) +
+  labs(title = "Histogram of 36-Month Rolling Volatility",
+       x = "Rolling Volatility (Standard Deviation)",
+       y = "Frequency") +
+  scale_fill_manual(values = palette) +
+  th
+
+```
+
+
+```{r}
+
+# Create a box plot of the rolling volatility
+ggplot(volatility_data, aes(x = Structure, y = RollingVolatility, fill = Structure, color = Structure)) +
+  geom_violin(alpha = 0.6) +
+  geom_jitter() +
+  labs(title = "Violin Plot of 36-Month Rolling Volatility",
+       x = "Portfolio Structure",
+       y = "Rolling Volatility (Standard Deviation)") +
+  scale_fill_manual(values = palette) +
+  scale_color_manual(values = palette) +
+  th
+
+```
 

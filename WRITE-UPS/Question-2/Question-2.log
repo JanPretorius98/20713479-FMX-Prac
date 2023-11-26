@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.25)  26 NOV 2023 01:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.25)  26 NOV 2023 11:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -631,25 +631,69 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <10.95> on input line 201.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <8> on input line 201.
-<Question-2_files/figure-latex/unnamed-chunk-1-1.pdf, id=12, 433.62pt x 361.35pt>
-File: Question-2_files/figure-latex/unnamed-chunk-1-1.pdf Graphic file (type pdf)
-<use Question-2_files/figure-latex/unnamed-chunk-1-1.pdf>
-Package pdftex.def Info: Question-2_files/figure-latex/unnamed-chunk-1-1.pdf  used on input line 228.
+<Question-2_files/figure-latex/cumrets-1.pdf, id=12, 433.62pt x 361.35pt>
+File: Question-2_files/figure-latex/cumrets-1.pdf Graphic file (type pdf)
+<use Question-2_files/figure-latex/cumrets-1.pdf>
+Package pdftex.def Info: Question-2_files/figure-latex/cumrets-1.pdf  used on input line 228.
 (pdftex.def)             Requested size: 433.61894pt x 361.34912pt.
-<Question-2_files/figure-latex/scatterplot-1.pdf, id=13, 505.89pt x 289.08pt>
-File: Question-2_files/figure-latex/scatterplot-1.pdf Graphic file (type pdf)
-<use Question-2_files/figure-latex/scatterplot-1.pdf>
-Package pdftex.def Info: Question-2_files/figure-latex/scatterplot-1.pdf  used on input line 230.
-(pdftex.def)             Requested size: 505.88875pt x 289.07928pt.
-
-Overfull \hbox (22.4766pt too wide) in paragraph at lines 230--231
-[][] 
- []
-
+<Question-2_files/figure-latex/rollrets-1.pdf, id=13, 433.62pt x 361.35pt>
+File: Question-2_files/figure-latex/rollrets-1.pdf Graphic file (type pdf)
+<use Question-2_files/figure-latex/rollrets-1.pdf>
+Package pdftex.def Info: Question-2_files/figure-latex/rollrets-1.pdf  used on input line 230.
+(pdftex.def)             Requested size: 433.61894pt x 361.34912pt.
 [1
 
 
-{/Users/janhendrikpretorius/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc} <./Question-2_files/figure-latex/unnamed-chunk-1-1.pdf>]
+{/Users/janhendrikpretorius/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc} <./Question-2_files/figure-latex/cumrets-1.pdf>]
+<Question-2_files/figure-latex/scatterplot-1.pdf, id=36, 505.89pt x 289.08pt>
+File: Question-2_files/figure-latex/scatterplot-1.pdf Graphic file (type pdf)
+<use Question-2_files/figure-latex/scatterplot-1.pdf>
+Package pdftex.def Info: Question-2_files/figure-latex/scatterplot-1.pdf  used on input line 232.
+(pdftex.def)             Requested size: 505.88875pt x 289.07928pt.
+
+Overfull \hbox (22.4766pt too wide) in paragraph at lines 232--233
+[][] 
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[2 <./Question-2_files/figure-latex/rollrets-1.pdf>]
+<Question-2_files/figure-latex/unnamed-chunk-2-1.pdf, id=49, 433.62pt x 361.35pt>
+File: Question-2_files/figure-latex/unnamed-chunk-2-1.pdf Graphic file (type pdf)
+<use Question-2_files/figure-latex/unnamed-chunk-2-1.pdf>
+Package pdftex.def Info: Question-2_files/figure-latex/unnamed-chunk-2-1.pdf  used on input line 258.
+(pdftex.def)             Requested size: 433.61894pt x 361.34912pt.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[3{/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc} <./Question-2_files/figure-latex/scatterplot-1.pdf>]
+<Question-2_files/figure-latex/histogram-1.pdf, id=72, 433.62pt x 361.35pt>
+File: Question-2_files/figure-latex/histogram-1.pdf Graphic file (type pdf)
+<use Question-2_files/figure-latex/histogram-1.pdf>
+Package pdftex.def Info: Question-2_files/figure-latex/histogram-1.pdf  used on input line 260.
+(pdftex.def)             Requested size: 433.61894pt x 361.34912pt.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[4 <./Question-2_files/figure-latex/unnamed-chunk-2-1.pdf>]
+<Question-2_files/figure-latex/unnamed-chunk-3-1.pdf, id=85, 433.62pt x 361.35pt>
+File: Question-2_files/figure-latex/unnamed-chunk-3-1.pdf Graphic file (type pdf)
+<use Question-2_files/figure-latex/unnamed-chunk-3-1.pdf>
+Package pdftex.def Info: Question-2_files/figure-latex/unnamed-chunk-3-1.pdf  used on input line 262.
+(pdftex.def)             Requested size: 433.61894pt x 361.34912pt.
 No file Question-2.bbl.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -658,27 +702,35 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller to compensate:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[2{/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc} <./Question-2_files/figure-latex/scatterplot-1.pdf>] (./Question-2.aux)
+[5 <./Question-2_files/figure-latex/histogram-1.pdf>]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[6 <./Question-2_files/figure-latex/unnamed-chunk-3-1.pdf>] (./Question-2.aux)
  ***********
 LaTeX2e <2023-11-01>
 L3 programming layer <2023-11-09>
  ***********
 Package rerunfilecheck Info: File `Question-2.out' has not changed.
-(rerunfilecheck)             Checksum: 9C94AD749A7680D06B17811199321A26;453.
+(rerunfilecheck)             Checksum: 62982AD6CCE6327783E7AA0E4E11A1AE;395.
  ) 
 Here is how much of TeX's memory you used:
- 16282 strings out of 476227
- 306231 string characters out of 5794748
+ 16314 strings out of 476227
+ 307804 string characters out of 5794748
  1930555 words of memory out of 5000000
- 37982 multiletter control sequences out of 15000+600000
+ 38010 multiletter control sequences out of 15000+600000
  611438 words of font info for 74 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,11n,79p,547b,902s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,79p,547b,902s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr9.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri7.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri9.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
-Output written on Question-2.pdf (2 pages, 220036 bytes).
+Output written on Question-2.pdf (6 pages, 276623 bytes).
 PDF statistics:
- 111 PDF objects out of 1000 (max. 8388607)
- 81 compressed objects within 1 object stream
- 9 named destinations out of 1000 (max. 500000)
- 27 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 171 PDF objects out of 1000 (max. 8388607)
+ 128 compressed objects within 2 object streams
+ 13 named destinations out of 1000 (max. 500000)
+ 47 words of extra memory for PDF output out of 10000 (max. 10000000)
 

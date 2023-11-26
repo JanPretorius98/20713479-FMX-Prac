@@ -294,3 +294,26 @@ df_Portf_Random <-
 df_Portf_EW <- 
   df_port_return_EW %>% group_by(date) %>% summarise(PortfolioReturn = sum(Returns*weight, na.rm =TRUE)) %>% 
   filter(PortfolioReturn != 0)
+
+
+
+
+####  Volatility
+
+dailydata <- fmxdat::DailyTRIs
+
+colnames(dailydata) <- gsub(" SJ", "", colnames(dailydata) )
+
+xts.data.dailyreturns <- 
+  
+  dailydata %>% 
+  
+  gather(Stock, TRI, -Date) %>% 
+  
+  group_by(Stock) %>% 
+  
+  mutate(Return = TRI / lag(TRI)-1) %>%  
+  
+  ungroup() %>% 
+  
+  tbl_xts(tblData = ., cols_to_xts = Return, spread_by = Stock)

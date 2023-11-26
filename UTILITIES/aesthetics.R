@@ -22,7 +22,7 @@ th <- theme(
     axis.text.x = element_text(size = 10,family = "Palatino"),
 
     # Title, subtitle, and caption
-    plot.title = element_text(size = 14,family = "Palatino",face = "bold"),
+    plot.title = element_text(size = 14, family = "Palatino",face = "bold"),
     plot.subtitle = element_text(size = 12,family = "Palatino"),
     plot.caption = element_text(size = 10,family = "Palatino", hjust = 1),
 
@@ -36,5 +36,6 @@ th <- theme(
     axis.ticks = element_blank(),
     strip.text = element_text(size = 12,family = "Palatino",vjust = 1,hjust = 0.5, face="bold"),
     strip.background = element_blank(),
-    text = element_text(family = "Palatino")
+    text = element_text(family = "Palatino"),
+    
 )

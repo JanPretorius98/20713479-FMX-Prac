@@ -262,6 +262,7 @@ ggsave("Figures/cumplot.png", plot = cumplot)
 
 - Comparing the plethora of ASISA funds with the benchmark and AI fund proved too wide. I had to narrow down the funds to compare. I first tried average returns, but this means that we lose a lot of the particular nuance in many of the funds. I then opted to compare quartiles, but in doing so, you bias the comparison by comparing low performing, average performing, and high performing funds by "selecting them". You also lose very important risk metrics. The final call was to randomly select 4 funds to compare as well as the average returns of the active funds.
 - Many of the actively managed funds have data only starting from much later. For the cumulative returns analysis, I had to filter the data from specific periods (in this case from 2014-02-28) in order to accurately compare cumulative returns.
+- I decided calculating rolling returns was the best option to meaningfully compare the funds with each other.
 
 ---
 
@@ -274,16 +275,15 @@ This question is stored in `WRITE-UPS`->`Question-2`. The following section expl
 1. **Impact on Returns:** What is the impact of currency hedging on the long-term returns of the portfolio? Does hedging enhance or diminish overall returns?
 2. **Volatility Comparison:** How does the rolling realized volatility of a fully hedged portfolio compare to an unhedged portfolio over time? 
 3. **Correlation Analysis:** How does the correlation between the South African Rand (ZAR) and global assets (like MSCI ACWI and Global Bond Aggregate) influence the portfolio's performance?
-4. **Risk-Adjusted Returns:** How do risk-adjusted returns (e.g., Sharpe Ratio) differ between the hedged and unhedged portfolios?
-5. **Diversification Benefits:** Does currency hedging enhance the diversification benefits of the portfolio? How does it affect the portfolio's risk profile?
-6. **Tactical vs. Strategic Hedging:** What insights can be gained about the effectiveness of tactical (short-term) versus strategic (long-term) currency hedging?
-7. **Currency Fluctuations:** How do fluctuations in the ZAR/USD exchange rate impact the performance of the local and global components of the portfolio?
 
 ### Approach:
 
 Let us first work on an approach to simulate currency hedging. Here is my line of thinking to do so:
 
-I attempt to simulate the effect of currency hedging on an investment portfolio by adjusting the returns of South African indices (J433, ALBI) in response to the ZAR/USD exchange rate fluctuations. The methodology involves recalculating the returns of these local indices by multiplying them with (1 + ExchangeRateGrowth), derived from the ZAR/USD exchange rate data. This adjustment aims to nullify the impact of currency movements, mimicking a hedging strategy that protects against exchange rate risks. The performance of this 'fully hedged' portfolio is then compared with an 'unhedged' portfolio (without such adjustments) to evaluate the effectiveness of the simulated currency hedging strategy in stabilizing portfolio returns against foreign exchange volatility. **Note:** Both the 'hedged' and 'unhedged' portfolios were rebalanced every quarter.
+I attempt to simulate the effect of currency hedging on an investment portfolio by adjusting the returns of South African indices (J433, ALBI) and US$ denominated indices in response to the ZAR/USD exchange rate fluctuations. The methodology involves recalculating the returns of these local indices by inflating/deflating them with exchange rate growth, derived from the ZAR/USD exchange rate data. This adjustment aims to nullify the impact of currency movements, mimicking a hedging strategy that protects against exchange rate risks. The performance of this 'fully hedged' portfolio is then compared with an 'unhedged' portfolio (without such adjustments) to evaluate the effectiveness of the simulated currency hedging strategy in stabilizing portfolio returns against foreign exchange volatility. **Note:** Both the 'hedged' and 'unhedged' portfolios were rebalanced every quarter.
+
+For more clarification, consider the schematic below:
+[]!("MISC/Schematic_Hedging.jpeg")
 
 To replicate the study and compare a hedged and unhedged portfolio, we'll need to follow these steps:
 

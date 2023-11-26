@@ -70,7 +70,7 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width 
 - On average, however, actively managed funds are below the benchmark.
 :::
 ::: {.column width="70%"}
-![](Figures/cumplot.png)
+![](Figures/rollplot.png)
 
 :::
 ::::::::::::::

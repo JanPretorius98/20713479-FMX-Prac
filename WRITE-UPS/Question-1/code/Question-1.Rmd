@@ -136,6 +136,15 @@ Rets_long_cum <- Rets_long %>%
   mutate(Cumulative_Returns = cumprod(1 + Returns)) %>%
   ungroup()
 
+#   Calculate 3 year rolling returns
+Rets_rolling <- 
+Rets_long %>% group_by(Fund) %>% 
+# Epic sorcery:
+mutate(RollRets = RcppRoll::roll_prod(1 + Returns, 36, fill = NA, 
+    align = "right")^(12/36) - 1) %>% 
+group_by(date) %>% filter(any(!is.na(RollRets))) %>% 
+ungroup()
+
 #   Comparing Funds against the Benchmark
 
 # Prepare BM_all
@@ -193,21 +202,61 @@ ggsave("Figures/boxplot.png", plot = boxplot)
 
 ```{r scatplot}
 
+calculate_performance <- function(data, fund_name) {
+    # Calculate the number of instances of outperformance
+    outperform <- data %>%
+        filter(Fund == fund_name & Returns > Benchmark) %>%
+        nrow()
+
+    # Calculate the number of instances of underperformance
+    underperform <- data %>%
+        filter(Fund == fund_name & Returns < Benchmark) %>%
+        nrow()
+
+    # Calculate the percentage of outperformance
+    perform_percentage <- outperform / (outperform + underperform) * 100
+
+    # Return the formatted percentage as a string
+    rounded_performance <- round(perform_percentage, 2)
+    return(paste0(rounded_performance, "%"))
+}
+
+
+performance_active <- calculate_performance(Funds_all, "Actively Managed")
+performance_ai <- calculate_performance(Funds_all, "AI Implementer")
+
 # Create the scatter plot
 scatplot <- Funds_all %>% 
     ggplot(aes(x = Benchmark, y = Returns, color = Fund)) +
+        # Shading triangles
+        geom_ribbon(aes(ymin = -Inf, ymax = Benchmark), fill = "#C93D44", alpha = 0.2) +
+        geom_ribbon(aes(ymin = Benchmark, ymax = Inf), fill = "#75A21B", alpha = 0.2) +
         geom_point(size = 1) +  # Add points
         geom_abline(slope = 1, intercept = 0, linetype = "dashed") +  # 45-degree line
         geom_smooth(method = "lm", formula = y ~ x, aes(group = Fund), se = FALSE) +  # Ab-lines
         scale_color_manual(values = palette) +
         labs(title = "Comparison of Fund Returns* vs. Benchmark",
-             subtitle = "Dashed line represents a 45º-line, indicating a 1-to-1 correlation between\nfund returns and benchmark.",
+             subtitle = "Dashed line represents a 45º-line, indicating a 1-to-1 correlation between\nfund returns and benchmark. Actively managed funds outperform the\nbenchmark 44.57% of the time, while AI Implementer outperforms\n57.43% of the time.",
              caption = "*After fees (Management fee is 100bps)",
              x = "Benchmark Returns",
              y = "Fund Returns",
-             color = "Fund Type") + th
+             color = "Fund Type") + th +
+    annotate("text", x = -0.08, y = 0.15, label = "Outperform Benchmark", hjust = 0.5, family= "Palatino") +
+    annotate("text", x = 0.08, y = -0.15, label = "Underperform Benchmark", hjust = 0.5, family= "Palatino")
+
+
+
+# Add labels to the plot
+scatplot <- scatplot 
+
+# Here, x_position, y_position_1, and y_position_2 are the coordinates where you want to place the labels.
+# You need to adjust these based on your plot's scale and layout.
+
+# Now, you can view or save your plot
+print(scatplot)
 
 ggsave("Figures/scatplot.png", plot = scatplot)
+
 ```
 
 
@@ -229,4 +278,20 @@ ggsave("Figures/cumplot.png", plot = cumplot)
 
 ```
 
+```{r rollplot}
+rollplot <- Rets_rolling %>% 
+    #filter(Fund == "Active Avg" | Fund == "AI Implementer" | Fund == "Benchmark") %>% 
+    ggplot(aes(x = date, y = RollRets, color = Fund)) +
+      geom_line(size = 0.8) +
+      scale_color_manual(values = palette) +
+      labs(title = "3-Year Rolling Annual Returns* for Selected Funds",
+           caption = "*After fees (Management fee is 100bps)",
+           x = "",
+           y = "Rolling 3 year Returns (Ann.)",
+           color = "Fund") +
+      scale_y_continuous(labels = scales::percent_format(scale = 100)) +
+      th
 
+ggsave("Figures/rollplot.png", plot = rollplot)
+
+```
