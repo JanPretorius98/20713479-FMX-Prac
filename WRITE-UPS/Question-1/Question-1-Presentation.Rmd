@@ -36,8 +36,7 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width 
 ::: {.column width="30%"}
 
 - AI Implementer fund has a 2% median return, higher than peers.
-- Superior consistency shown by a tighter IQR than active funds.
-- Minimal outliers reflect reduced risk of significant losses.
+- While there is higher volatility (larger IQR), it generally outperforms other funds
 
 :::
 ::: {.column width="70%"}
@@ -60,7 +59,7 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width 
 :::
 ::::::::::::::
 
-## Cumulative Returns over Time
+## Rolling Returns over Time
 
 \footnotesize
 :::::::::::::: {.columns}
