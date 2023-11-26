@@ -299,12 +299,13 @@ To replicate the study and compare a hedged and unhedged portfolio, we'll need t
 3. Hedging and Unhedging:
 
 - For the unhedged portfolio, we'll use the returns as they are.
-- For the hedged portfolio, we'll need to adjust the returns of the South African components (J433 & ALBI) using the exchange rate data in ZAR. This simulates the effect of hedging against currency fluctuations.
+- For the hedged portfolio, we'll need to adjust the returns of the indices using the exchange rate data in ZAR. This simulates the effect of hedging against currency fluctuations.
 
 4.  Compare the Portfolios:
 
 - Calculate the rolling realized volatility for both portfolios.
 - Compare these volatilities over time to analyze the impact of hedging.
+- Calculate return metrics.
 
 ### Code:
 
