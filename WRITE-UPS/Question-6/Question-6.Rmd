@@ -1,8 +1,8 @@
 ---
 # Basic template for FMX Prac:
 
-title: "Question 3: Portfolio Construction"
-subtitle: "Question 3: Portfolio Construction"
+title: "Question 6: Portfolio Construction"
+subtitle: "Question 6: Portfolio Construction"
 
 documentclass: "elsarticle"
 
@@ -51,7 +51,7 @@ output:
     fig_width: 3.5 
     fig_height: 3.5
 abstract: |
-  Insert abstract if necessary.
+  This report outlines the process of building a Global Balanced Index Fund portfolio using global indexes. Our method involves practical financial econometrics techniques to address the challenges of the global market. We follow a straightforward investment strategy that includes a long-only approach, regular quarterly rebalancing, and set limits on different types of assets. The portfolio is crafted based on detailed data analysis, aiming for a balanced and effective investment strategy.
 ---
 
 
@@ -89,7 +89,7 @@ msci <- read_rds(paste0(path, "DATA/", file)) %>%
 
 <!-- ############################## -->
 
-```{r data-operations}
+```{r data-operations, results='hide'}
 
 # Function that checks for elements with less than a specific lifespan and returns a filtered dataframe if necessary
 check_and_filter_time_span <- function(data, date_column, name_column) {
@@ -127,7 +127,7 @@ Portf <- Portf %>%
   group_by(Ticker, YM = format(date, "%Y-%m")) %>%
   filter(date == max(date)) %>%  # Keep only the last day of each month
   mutate(
-    Monthly_Price = last(Price)
+    Monthly_Price = dplyr::last(Price)
   ) %>%
   ungroup() %>%
   group_by(Ticker) %>%
@@ -136,6 +136,7 @@ Portf <- Portf %>%
   ) %>%
   ungroup() %>%
   select(-Monthly_Price, -YM)  # Optionally remove the helper columns
+
 
 # Prepare the wide format data
 Portf_wide <- Portf %>%
@@ -201,6 +202,7 @@ Portf_Weights <-
 
 ```
 
+#       Optimizing the Portfolio
 
 ```{r}
 
@@ -210,7 +212,7 @@ EOQ_datevec <- Portf_wide %>%
   mutate(YM = format(date, "%Y%m")) %>%  # Format to include both year and month
   group_by(YM) %>%
   filter(lubridate::month(date) %in% c(1, 4, 7, 10)) %>%  # Filter for end of quarters
-  summarise(date = last(date)) %>%
+  summarise(date = dplyr::last(date)) %>%
   pull(date)
 
 
@@ -227,9 +229,27 @@ head(Lookback_24, 13) %>%
 
 ```
 
-# Let's Make some plots!
+The Lookback table presents the results from the rolling optimization analysis using a 24-month lookback period. This snapshot, taken on January 31, 2011, indicates the calculated optimal weights for various assets in the portfolio at that specific point in time.
 
-```{r}
+From the table, we can deduce the following:
+
+- **Equal Minimal Weights**: Several assets such as the **ADXY Index**, **BCOMTR Index**, **DXY Index**, **LEATTREU Index**, **LGAGTRUH Index**, **LGCPTRUH Index**, **LP05TREH Index**, and **LUAGTRUU Index** are assigned equal minimal weights of 0.0100. This suggests a strategy of minimal equal diversification across these assets during the period in question.
+  
+- **Selective Overweighting**: In contrast, significantly higher weights are allocated to the **LUACTRUU Index** (0.160), **MSCI_ACWI** (0.250), **MSCI_Jap** (0.250), and **MSCI_USA** (0.250). This indicates a strategic decision to overweight these assets, perhaps due to their larger size, better performance, or lower volatility observed during the lookback period.
+  
+- **Diversification and Focus**: The higher weights on specific assets imply a focus on particular markets or asset classes. For example, the significant allocation to **MSCI_Jap**, **MSCI_ACWI**, and **MSCI_USA** suggests a strong emphasis on equity exposure, particularly in the American and Japanese markets, as well as a global reach through the **MSCI_ACWI**.
+
+The table encapsulates the portfolio's composition at a moment in time, reflecting the strategic decisions based on historical performance and volatility over the preceding two years. It demonstrates a disciplined approach to allocation, with the combination of broad diversification and targeted focus intended to enhance the portfolio's performance and resilience.
+
+## Portfolio Optimization Process
+
+The portfolio was optimized using a combination of calculated mean returns and covariance estimations of the assets, respecting specified constraints such as maximum exposure limits to equities and bonds. We employed various optimization strategies, including minimum variance and equal risk contribution, to find the most effective asset allocation. This process was integral in striking a balance between risk and return, tailored to meet our investment objectives and risk tolerance levels.
+
+# Results
+
+## Weights Distribution
+
+```{r stacked-bar}
 
 ggplot(Lookback_24, aes(x = date, y = weight, fill = stocks)) +
   geom_bar(stat = "identity", color = "black") +
@@ -246,8 +266,31 @@ ggplot(Lookback_24, aes(x = date, y = weight, fill = stocks)) +
 
 ```
 
+The figure above displays the weight distribution over time of various assets within a portfolio. It is a stacked bar chart where each color represents a different asset, and the combined weight of all assets adds up to 1 (or 100%) for any given period. This visual effectively illustrates the changing allocation to each asset from 2012 through to the beginning of 2022.
 
-```{r fig.height= 7.5, fig.width=7.5}
+From the chart, we can observe that certain assets have maintained a consistent presence in the portfolio over time, indicating a potentially stable role in the investment strategy. On the other hand, some assets show more variability in their allocation, which may reflect dynamic adjustments to the portfolio in response to changing market conditions or the rebalancing rules applied in the optimization process.
+
+## Correlation
+
+The correlation plot presented here is a heat map that visualizes the pairwise correlation coefficients between different financial indices. Each square represents the correlation between the indices on the vertical and horizontal axis.
+
+In this plot:
+
+- Red squares indicate a positive correlation, where the values closer to 1.0 suggest a stronger direct relationship.
+- Blue squares represent a negative correlation, with values closer to -1.0 indicating a stronger inverse relationship.
+- White or light-colored squares signify a neutral or no significant correlation, with values around 0.
+
+Looking at the plot, we can see a mix of red and blue squares, which implies a varied correlation structure within this set of indices. Some indices, such as those along the diagonal, have a perfect positive correlation with themselves, as expected. Others show varying degrees of positive and negative correlations, indicating how some indices tend to move together while others move in opposite directions.
+
+The correlation plot reveals various degrees of relationships between the indices:
+
+- The **MSCI_USA** and **MSCI_ACWI** are highly correlated, as indicated by the dark red color, suggesting that movements in the US market have a strong influence on the global index.
+- Conversely, **DXY_Index**, representing the US dollar index, shows a strong negative correlation (dark blue) with **BCOMTR_Index**, an index representing commodities, highlighting an inverse relationship typically observed between the dollar and commodity prices.
+- The **LEATTREU_Index** and **LGAGTRUH_Index**, both related to fixed income, show a moderate to strong positive correlation with each other, visible in lighter red, implying that they may respond similarly to changes in interest rates or other economic factors affecting bonds.
+- The **MSCI_Jap**, representing the Japanese market, displays a mix of correlations with global indices, with some reds indicating positive correlations and some blues indicating negative correlations, reflecting a more complex relationship influenced by specific regional economic events and global market trends.
+- The **MSCI_RE**, reflecting real estate securities, seems to be less correlated (white to light blue) with bond indices like **LP05TREH_Index** and **LUACTRUU_Index**, suggesting that real estate securities may not always move in concert with bond markets, offering potential diversification benefits.
+
+```{r corrplot, fig.height= 7.5, fig.width=7.5}
 
 corr_plot <- Portf_wide %>% 
     select(-date)
@@ -257,7 +300,8 @@ ggcorr(corr_plot, method = c("everything", "pearson"))
 ```
 
 
-```{r}
+
+```{r dendro}
 
 # Calculate the correlation matrix (use complete data or a specific period as required)
 cor_matrix <- cor(Portf_wide[,-1], use = "complete.obs")
@@ -272,13 +316,21 @@ hc <- hclust(dist_matrix, method = "ward.D2")
 plot(hc, hang = -1, cex = 0.6, main = "Hierarchical Clustering of Assets")
 
 ```
-Interpreting the Dendrogram:
 
-- Each branch in the dendrogram represents an asset or a group of assets.
-- The height at which two branches merge indicates the dissimilarity between those groups; lower heights mean more similar.
-- You can use the dendrogram to identify clusters of assets that have similar return characteristics.
+## Hierarchical Clustering
 
-```{r warning=FALSE}
+The dendrogram represents the hierarchical clustering of various financial assets based on the similarity of their movements:
+
+- **Close Clusters**: Assets that are grouped together at the lower heights (short vertical lines) are more similar to each other. For example, the **MSCI_Jap** and **MSCI_RE** are closely linked, suggesting that they have moved in a similar fashion historically. The **MSCI_ACWI** and **MSCI_USA** also form a close cluster, implying that global market movements are closely tied to US market movements.
+
+- **Distinct Groups**: On the right side of the dendrogram, there's a distinct grouping of bond indices such as **LEATTREU_Index**, **LGAGTRUH_Index**, and **LUAGTRUU_Index**, indicating that these assets share similar return patterns, likely reflecting similar market influences or investor behaviors.
+
+- **Height of Mergers**: The height at which clusters join represents the dissimilarity between groups. For example, the **ADXY Index** and the **BCOMTR Index** join at a higher level with the **DXY Index**, suggesting less similarity compared to other clusters.
+
+- **Diversification Insight**: The dendrogram can also be interpreted from a diversification perspective, where assets that do not cluster tightly with others (e.g., **DXY Index**) might provide diversification benefits to a portfolio that includes any of the closely linked assets.
+
+
+```{r garch, warning=FALSE}
 
 #returns_data <- Portf_wide[,-1]
 
@@ -298,3 +350,7 @@ Interpreting the Dendrogram:
 
 ```
 
+
+# Conclusion
+
+The Global Balanced Index Fund portfolio, as analyzed and visualized through the Lookback24 table and various plots, demonstrates a strategic and responsive asset allocation. The portfolio benefits from a disciplined approach to diversification, striking a balance between fixed income and equities, and capturing growth opportunities in key markets such as the United States and Japan. The optimizations reflect a robust methodology that considers historical performance and aims for a balanced risk-return profile, making it a viable and thoughtfully composed investment vehicle.

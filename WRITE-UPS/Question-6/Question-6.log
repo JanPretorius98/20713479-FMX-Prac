@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.25)  26 NOV 2023 23:37
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.25)  27 NOV 2023 00:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -593,63 +593,57 @@ Package hyperref Info: Link coloring ON on input line 164.
 
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 201.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 208.
 (/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 201.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 208.
 (/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 201.
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 208.
 (/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 201.
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 208.
 (/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 201.
+(Font)              <9> on input line 208.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 201.
+(Font)              <6> on input line 208.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 201.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 201.
+(Font)              <5> on input line 208.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 208.
 (/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 201.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 208.
 (/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 201.
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 208.
 (/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 201.
+(Font)              <10.95> on input line 208.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 201.
-<Question-6_files/figure-latex/unnamed-chunk-2-1.pdf, id=8, 433.62pt x 361.35pt>
-File: Question-6_files/figure-latex/unnamed-chunk-2-1.pdf Graphic file (type pdf)
-<use Question-6_files/figure-latex/unnamed-chunk-2-1.pdf>
-Package pdftex.def Info: Question-6_files/figure-latex/unnamed-chunk-2-1.pdf  used on input line 258.
-(pdftex.def)             Requested size: 433.61894pt x 361.34912pt.
+(Font)              <8> on input line 208.
 [1
 
 
 {/Users/janhendrikpretorius/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}]
-<Question-6_files/figure-latex/unnamed-chunk-3-1.pdf, id=26, 542.025pt x 542.025pt>
-File: Question-6_files/figure-latex/unnamed-chunk-3-1.pdf Graphic file (type pdf)
-<use Question-6_files/figure-latex/unnamed-chunk-3-1.pdf>
-Package pdftex.def Info: Question-6_files/figure-latex/unnamed-chunk-3-1.pdf  used on input line 260.
-(pdftex.def)             Requested size: 542.02367pt x 542.02367pt.
-
-Overfull \hbox (58.61151pt too wide) in paragraph at lines 260--261
-[][] 
- []
-
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 270.
+(/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
+File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+<Question-6_files/figure-latex/stacked-bar-1.pdf, id=48, 433.62pt x 361.35pt>
+File: Question-6_files/figure-latex/stacked-bar-1.pdf Graphic file (type pdf)
+<use Question-6_files/figure-latex/stacked-bar-1.pdf>
+Package pdftex.def Info: Question-6_files/figure-latex/stacked-bar-1.pdf  used on input line 318.
+(pdftex.def)             Requested size: 433.61894pt x 361.34912pt.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -657,12 +651,54 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller to compensate:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[2 <./Question-6_files/figure-latex/unnamed-chunk-2-1.pdf>]
-<Question-6_files/figure-latex/unnamed-chunk-4-1.pdf, id=39, 433.62pt x 361.35pt>
-File: Question-6_files/figure-latex/unnamed-chunk-4-1.pdf Graphic file (type pdf)
-<use Question-6_files/figure-latex/unnamed-chunk-4-1.pdf>
-Package pdftex.def Info: Question-6_files/figure-latex/unnamed-chunk-4-1.pdf  used on input line 262.
+[2{/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[3 <./Question-6_files/figure-latex/stacked-bar-1.pdf>]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[4]
+<Question-6_files/figure-latex/corrplot-1.pdf, id=75, 542.025pt x 542.025pt>
+File: Question-6_files/figure-latex/corrplot-1.pdf Graphic file (type pdf)
+<use Question-6_files/figure-latex/corrplot-1.pdf>
+Package pdftex.def Info: Question-6_files/figure-latex/corrplot-1.pdf  used on input line 399.
+(pdftex.def)             Requested size: 542.02367pt x 542.02367pt.
+
+Overfull \hbox (58.61151pt too wide) in paragraph at lines 399--400
+[][] 
+ []
+
+<Question-6_files/figure-latex/dendro-1.pdf, id=76, 433.62pt x 361.35pt>
+File: Question-6_files/figure-latex/dendro-1.pdf Graphic file (type pdf)
+<use Question-6_files/figure-latex/dendro-1.pdf>
+Package pdftex.def Info: Question-6_files/figure-latex/dendro-1.pdf  used on input line 401.
 (pdftex.def)             Requested size: 433.61894pt x 361.34912pt.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[5 <./Question-6_files/figure-latex/corrplot-1.pdf>]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[6 <./Question-6_files/figure-latex/dendro-1.pdf>]
 No file Question-6.bbl.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -671,35 +707,27 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller to compensate:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[3 <./Question-6_files/figure-latex/unnamed-chunk-3-1.pdf>]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[4 <./Question-6_files/figure-latex/unnamed-chunk-4-1.pdf>] (./Question-6.aux)
+[7] (./Question-6.aux)
  ***********
 LaTeX2e <2023-11-01>
 L3 programming layer <2023-11-09>
  ***********
 Package rerunfilecheck Info: File `Question-6.out' has not changed.
-(rerunfilecheck)             Checksum: 04011476D4FC0E6124E4C5DA94A37202;162.
+(rerunfilecheck)             Checksum: 033A1E04F60A4FAB8A58D3642A9F295A;1000.
  ) 
 Here is how much of TeX's memory you used:
- 16288 strings out of 476227
- 306635 string characters out of 5794748
- 1936555 words of memory out of 5000000
- 37990 multiletter control sequences out of 15000+600000
- 611757 words of font info for 75 fonts, out of 8000000 for 9000
+ 16350 strings out of 476227
+ 307828 string characters out of 5794748
+ 1938555 words of memory out of 5000000
+ 38032 multiletter control sequences out of 15000+600000
+ 616066 words of font info for 76 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,12n,79p,547b,904s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr9.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri7.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri9.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
-Output written on Question-6.pdf (4 pages, 212825 bytes).
+ 75i,12n,79p,547b,979s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr9.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri7.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri9.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
+Output written on Question-6.pdf (7 pages, 228669 bytes).
 PDF statistics:
- 104 PDF objects out of 1000 (max. 8388607)
- 72 compressed objects within 1 object stream
- 9 named destinations out of 1000 (max. 500000)
- 24 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 155 PDF objects out of 1000 (max. 8388607)
+ 118 compressed objects within 2 object streams
+ 24 named destinations out of 1000 (max. 500000)
+ 72 words of extra memory for PDF output out of 10000 (max. 10000000)
 
