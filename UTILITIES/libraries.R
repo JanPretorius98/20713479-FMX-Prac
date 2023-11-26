@@ -18,5 +18,4 @@ pacman::p_load(dplyr,
                rportfolios,
                ggExtra,
                reshape2,
-               GGally,
-               rmgarch)
+               GGally)

@@ -1,8 +1,8 @@
 ---
 # Basic template for FMX Prac:
 
-title: "Question 1: Systematic AI Fund"
-subtitle: "Question 1: Systematic AI Fund"
+title: "Question 2: Currency Hedging Analysis"
+subtitle: "Question 2: SCurrency Hedging Analysis"
 
 documentclass: "elsarticle"
 
@@ -51,7 +51,7 @@ output:
     fig_width: 3.5 # Adjust default figure sizes. This can also be done in the chunks of the text.
     fig_height: 3.5
 abstract: |
-  Insert abstract if necessary.
+  This report examines the impact of currency hedging on a 60/40 Equity/Bond portfolio. Comparing hedged and unhedged strategies, we analyze their effects on portfolio volatility and performance, providing insights for effective currency risk management in portfolio construction.
 ---
 
 
@@ -133,6 +133,7 @@ combined_portfolio <- combined_portfolio %>%
 
 ```
 
+# Hedged vs Unhedged Growth
 
 ```{r cumrets}
 
@@ -150,6 +151,9 @@ ggplot(aes(x = date, y = CumulativeReturn, color = Structure)) +
 ```
 
 
+The graph above illustrates the cumulative returns of hedged versus unhedged portfolios from 2005 onwards. Both strategies show growth over time, with the hedged portfolio occasionally outperforming the unhedged one. There is some divergence, particularly during periods of market volatility, but the long-term trajectory of both portfolios appears similar, indicating that hedging may not significantly impact cumulative returns over an extended period.
+
+The 3-year rolling returns chart below for hedged and unhedged portfolios highlights fluctuations over time. Despite some periods where the hedged portfolio shows slightly lower volatility, overall, both portfolios follow a similar pattern. This suggests that hedging may not provide a clear advantage in smoothing returns over a three-year rolling period.
 
 ```{r rollrets}
 
@@ -166,6 +170,10 @@ ggplot(aes(x = date, y = RollRets, color = Structure)) +
 
 ```
 
+
+The figure below was replicated from a recent study around currency hedging. It shows how global allocation and the rand have a strong negative relationship since 2004. This means that when one goes up, the other goes down, and vice versa. This happens because both are influenced by the same global factors. For example, when there's positive risk sentiment, both global allocation and the rand tend to do well, and when sentiment is negative, they both suffer.
+
+Also, notice that the rand tends to drop more significantly in value in a month than it appreciates. So, if you make a wrong hedge (on the right side of the plot), it can be much costlier than the benefit of getting it right (on the left side).
 
 ```{r scatterplot, fig.width=7, fig.height=4}
 
@@ -207,7 +215,9 @@ print(p)
 ```
 
 
-# Next create the downside risk table from Prac 2
+# Volatility
+
+When comparing the hedged and unhedged portfolios, the hedged portfolio tends to exhibit slightly higher downside risk, as indicated by the higher values in semi-deviation, downside deviation, maximum drawdown, VaR, ES, and modified VaR. However, the differences between the two portfolios are relatively small, suggesting that the choice between hedging or not may depend on other factors such as investment goals and risk tolerance. This information is presented in the table below.
 
 ```{r}
 
@@ -238,7 +248,8 @@ tabdownside %>%
 
 ```
 
-# Volatility
+
+The graphical representations presented in the following figures (which include the 36-month rolling volatility, volatility histogram, and violin plot) provide compelling evidence that hedging strategies may not deliver the anticipated reduction in volatility. In fact, the data suggests a counterintuitive trend—over extended timeframes, volatility tends to exhibit an upward trajectory. This unexpected pattern challenges the fundamental goal of hedging, which is often implemented to mitigate risk and stabilize portfolio performance. This intriguing finding invites further exploration and analysis into the dynamics of hedging and its long-term impact on portfolio volatility.
 
 ```{r rolling-ret}
 
