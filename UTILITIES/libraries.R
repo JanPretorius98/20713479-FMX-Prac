@@ -16,4 +16,7 @@ pacman::p_load(dplyr,
                RiskPortfolios,
                fitHeavyTail,
                rportfolios,
-               ggExtra)
+               ggExtra,
+               reshape2,
+               GGally,
+               rmgarch)

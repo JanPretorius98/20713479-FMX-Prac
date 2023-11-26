@@ -53,3 +53,36 @@ Proportional_Cap_Foo <- function(df_Cons, W_Cap = 0.08){
   df_Cons
   
 }
+
+
+
+apply_industry_caps <- function(df, sector_caps, rebalance_days) {
+  # Ensure the dataframe contains the required columns
+  required_cols <- c("date", "Sector", "TotalWeight", "RealizedReturn")
+  if (!all(required_cols %in% names(df))) {
+    stop("The dataframe is missing one or more required columns: ", 
+         paste(required_cols, collapse = ", "))
+  }
+  
+  # Apply capping only on rebalancing days
+  df_capped <- df %>%
+    mutate(IsRebalanceDay = date %in% rebalance_days) %>%
+    group_by(date) %>%
+    mutate(AdjustedWeight = ifelse(IsRebalanceDay,
+                                   pmin(TotalWeight, sector_caps[Sector]),
+                                   TotalWeight),
+           ExcessWeight = TotalWeight - AdjustedWeight,
+           TotalExcess = sum(ExcessWeight),
+           RedistributeFactor = ifelse(IsRebalanceDay,
+                                       TotalExcess / (1 - sum(AdjustedWeight)),
+                                       0)) %>%
+    mutate(AdjustedWeight = ifelse(IsRebalanceDay,
+                                   ifelse(TotalWeight > sector_caps[Sector], 
+                                          AdjustedWeight, 
+                                          AdjustedWeight + ExcessWeight * RedistributeFactor),
+                                   TotalWeight)) %>%
+    ungroup() %>%
+    select(-IsRebalanceDay, -ExcessWeight, -TotalExcess, -RedistributeFactor)
+  
+  return(df_capped)
+}

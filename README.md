@@ -331,6 +331,11 @@ This question is stored in `WRITE-UPS`->`Question-3`. The following section expl
 
 ### The folllowing questions guide the analysis:
 
+1. **Size and Sector Impact on ALSI and SWIX Performance**: How do size categories (large, mid, small caps) and sector distributions influence the performance of the ALSI and SWIX indexes over time?
+
+2. **Rebalancing Effects and Market Dynamics**: What is the impact of rebalancing days on the ALSI and SWIX indexes? Are there correlations with market volatility and currency performance?
+
+3. **Capping Levels and Index Performance**: What are the effects of different capping levels (5%, 10%, uncapped) on the diversification and performance of the ALSI and SWIX indexes?
 
 ### Code:
 
@@ -343,6 +348,13 @@ This question is stored in `WRITE-UPS`->`Question-3`. The following section expl
 
 
 ### Some pitfalls along the way:
+
+- The first issue I encountered is missing values in the Index_Name column of ALSI. I first identified Tickers that resulted in these NA values. I initially replaced the NA values in the Index_Name column with "Unclassified" as a straightforward and transparent way to handle missing data in this context. This approach allows one to keep all the data points in the analysis while acknowledging that certain tickers couldn't be classified into the existing size categories (Large, Mid, Small Caps).
+- However, after looking at their movement, which closely resembled small caps movement, I imputed these missing values as "Small Caps"
+- Rolling returns and daily data: A common approach for daily data is to use a 252-day window, as there are typically 252 trading days in a year. This is the approach that was followed.
+- More missing weight values for J403. I just replaced the NA values with 0,000046 and 0,0023 for HPB and ROC respectively, reflecting numbers close to the weights at the time.
+- When I attempted to cap by industry, I ran into the problem of being unable to calculate the unweighted realized industry returns, because I needed the data on an industry-wide level. The capping process turned out much more complex then I could have imagined. I then decided to opt for the easiest (albeit not the best) route and got the average unweighted returns per industry in order to reweight based on the capping.
+- In the end, I decided to abandon the project as I was consuming way too much time on this question and opted to use what I already had for the report. The unfinished code has, however, been included.
 
 ---
 
