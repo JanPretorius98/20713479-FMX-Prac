@@ -34,14 +34,30 @@ Documentation for questions will follow this general format:
 ---
 ##  Installation
 
-The project makes use of the following packages, that can be loaded with the external script `libraries.R` (see `UTILITIES` below):
-- dplyr
-- ggplot2
-- tidyverse
-- stringr
-- tidytext
-- readxl
-- xtable
+The project makes use of the following packages, which can be loaded with the external script `libraries.R` (see UTILITIES below):
+
+- `dplyr`
+- `ggplot2`
+- `tidyverse`
+- `tidyr`
+- `stringr`
+- `tidytext`
+- `glue`
+- `readxl`
+- `xtable`
+- `PerformanceAnalytics`
+- `RcppRoll`
+- `tbl2xts`
+- `lubridate`
+- `gt`
+- `rmsfuns`
+- `RiskPortfolios`
+- `fitHeavyTail`
+- `rportfolios`
+- `ggExtra`
+- `reshape2`
+- `GGally`
+- `rmgarch`
 
 These libraries are loaded using the pacman package, which offers a more convenient way to load R packages, installing them if necessary. Ensure that pacman is installed on your machine by running the following code in R:
 
@@ -406,11 +422,29 @@ This question is stored in `WRITE-UPS`->`Question-6`. The following section expl
 
 ### The folllowing questions guide the analysis:
 
+1. **How can a global balanced index fund portfolio be optimized considering various constraints and historical data?**
+   - This question is addressed through the construction of the portfolio, considering constraints like maximum exposure to equities and bonds, and the use of historical return data for optimization.
+
+2. **What is the impact of time-span and rebalancing strategies on portfolio performance?**
+   - The analysis involves filtering assets based on their historical data availability (minimum 3 years) and exploring different look-back periods for rolling optimization, reflecting on how these factors influence portfolio construction and rebalancing.
+
+3. **How do correlations between different assets in the portfolio evolve and influence portfolio diversification?**
+   - The focus here is on understanding asset correlations through hierarchical clustering and potentially GARCH models (though the latter was left out), which helps in identifying asset classes or groups with similar return characteristics for better diversification strategies.
 
 ### Code:
+In the provided code, the main operations include:
 
+1. **Filtering Assets**: Assets with less than three years of data are removed to ensure a stable analysis base.
+2. **Calculating Returns**: Monthly returns for each asset are computed, focusing on the last trading day of each month.
+3. **Data Reshaping**: The dataset is transformed into a wide format, with separate columns for each asset's returns.
+4. **Covariance and Mean Estimation**: The covariance matrix and mean returns for the assets are calculated, essential for portfolio optimization.
+5. **Portfolio Optimization Setup**: Constraints are applied for portfolio optimization, including limits on asset weights and specific allocations for equities and bonds.
+6. **Rolling Optimization**: The portfolio is optimized over different rolling periods to analyze performance dynamics.
+7. **Visualization**: Key visualizations are prepared, including weight distribution over time and a correlation matrix plot.
 
 #### Data operations:
+
+
 
 
 #### Plotting:
@@ -418,7 +452,8 @@ This question is stored in `WRITE-UPS`->`Question-6`. The following section expl
 
 
 ### Some pitfalls along the way:
-
+- In general not many issues with this question.
+- I did attempt to create a simple GARCH model, but in the end decided that this would be overkill. I decided that what I already had was enough.
 ---
 
 
