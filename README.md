@@ -444,12 +444,206 @@ In the provided code, the main operations include:
 
 #### Data operations:
 
+```r
+
+# Function that checks for elements with less than a specific lifespan and returns a filtered dataframe if necessary
+check_and_filter_time_span <- function(data, date_column, name_column) {
+  # Calculate the time span for each asset
+  time_span_data <- data %>%
+    group_by({{name_column}}) %>%
+    mutate(
+      time_span = as.numeric(difftime(max({{date_column}}), min({{date_column}}), units = "days"))
+    ) %>%
+    ungroup()
+
+  # Check if any asset has less than 3 years of data
+  if(any(time_span_data$time_span < (3 * 365))) {
+    # Filter out assets with less than 3 years of data
+    filtered_data <- time_span_data %>%
+      filter(time_span >= (3 * 365))
+
+    return(filtered_data)
+  } else {
+    print("All elements meet the criteria")  
+    return(data)
+  }
+}
 
 
+Portf <- bind_rows(msci, MAA) %>% 
+  select(-Name)
+
+# Now apply the check_and_filter_time_span function
+Portf <- check_and_filter_time_span(Portf, date, Ticker)
+
+# Calculate returns
+Portf <- Portf %>%
+  arrange(Ticker, date) %>%
+  group_by(Ticker, YM = format(date, "%Y-%m")) %>%
+  filter(date == max(date)) %>%  # Keep only the last day of each month
+  mutate(
+    Monthly_Price = dplyr::last(Price)
+  ) %>%
+  ungroup() %>%
+  group_by(Ticker) %>%
+  mutate(
+    Returns = (Monthly_Price/lag(Monthly_Price) - 1)
+  ) %>%
+  ungroup() %>%
+  select(-Monthly_Price, -YM)  # Optionally remove the helper columns
+
+
+# Prepare the wide format data
+Portf_wide <- Portf %>%
+  select(-Price) %>%
+  pivot_wider(
+    names_from = Ticker,
+    values_from = Returns
+  )
+
+# Filter data from 2010
+Portf <- Portf %>%
+  filter(date >= as.Date("2011-01-01"))
+
+# Make a wide df
+Portf_wide <- Portf_wide %>%
+  filter(date >= as.Date("2011-01-01"))
+
+```
+
+```r
+
+# Sample covariance and mean:
+#First, we need to ensure that the date column is removed to calc sigma and mu (and ensure it is a matrix)
+Portf_ret_mat <- data.matrix(Portf_wide[,-1])
+
+Sigma <- RiskPortfolios::covEstimation(Portf_ret_mat)
+
+Mu <- Portf_wide %>% 
+    summarise(across(-date, ~prod(1+.)^(1/n())-1)) %>% 
+    purrr::as_vector()
+
+NStox <- ncol(Portf_ret_mat)
+meq = 1 
+LB = 0.01
+UB = 0.25
+eq_UB = 0.6 #equity constraint
+bond_UB = 0.4 #bond constraint
+
+#   Let's figure out where the equities and bonds are located in my data:
+    #  1. Equity; 2. Equity; 3. Equity; 4. Equity; 5. Currency; 6. Bond; 7. Bond; 8. Bond; 9. Bond; 10. Bond; 11. Bond; 12. Commodity; 13. Currency
+
+eq_const_mat <- rbind(
+  -diag(4), # Constraints for equities
+  matrix(0, nrow = 9, ncol = 4) # No equity constraints for other asset types
+)
+
+bond_const_mat <- rbind(
+  matrix(0, nrow = 5, ncol = 6), # No bond constraints for first 5 assets (Equity, Currency)
+  -diag(6), # Constraints for bonds
+  matrix(0, nrow = 2, ncol = 6) # No bond constraints for last 2 assets (Commodity, Currency)
+)
+
+bvec <- c( 1, rep(LB, NStox), -rep(UB, NStox), -rep(bond_UB, 6), -rep(eq_UB, 4))
+Amat <- cbind(1, diag(NStox), -diag(NStox), bond_const_mat, eq_const_mat )
+
+Portf_Weights <- 
+  left_join(
+  optim_foo(Type = "mv", mu, Sigma, LB = 0, UB = 0.4, printmsg = F),
+  optim_foo(Type = "minvol", mu, Sigma, LB= 0, UB =0.4, printmsg = F),
+  by = c("Tickers")) %>% 
+    left_join(.,optim_foo(Type = "erc", mu, Sigma, LB= 0, UB =0.4, printmsg = F),by = c("Tickers")) %>% 
+      left_join(.,optim_foo(Type = "riskeff", mu, Sigma, LB= 0, UB =0.4, printmsg = F),by = c("Tickers"))
+
+```
 
 #### Plotting:
+```r
+
+EOQ_datevec <- Portf_wide %>%
+  select(date) %>%
+  unique() %>%
+  mutate(YM = format(date, "%Y%m")) %>%  # Format to include both year and month
+  group_by(YM) %>%
+  filter(lubridate::month(date) %in% c(1, 4, 7, 10)) %>%  # Filter for end of quarters
+  summarise(date = dplyr::last(date)) %>%
+  pull(date)
 
 
+Lookback_24 <- EOQ_datevec %>% 
+    map_df(~Roll_optimizer(Portf_wide, EOQ_datevec = ., LookBackSel = 24))
+
+
+head(Lookback_24, 13) %>%
+  gt() %>%
+  tab_header(
+    title = "Result Lookback Table (2-Years)"
+  )
+
+
+```
+```r
+
+ggplot(Lookback_24, aes(x = date, y = weight, fill = stocks)) +
+  geom_bar(stat = "identity", color = "black") +
+  th +
+  labs(
+    title = "Weight Distribution Over Time",
+    x = "Date",
+    y = "Weight",
+    fill = "Asset"
+  ) +
+    theme(legend.position = "right")
+
+
+
+```
+
+```r
+
+corr_plot <- Portf_wide %>% 
+    select(-date)
+
+# Nice visualization of correlations
+ggcorr(corr_plot, method = c("everything", "pearson")) 
+```
+
+```r
+
+# Calculate the correlation matrix (use complete data or a specific period as required)
+cor_matrix <- cor(Portf_wide[,-1], use = "complete.obs")
+
+# Convert the correlation matrix to a distance matrix
+dist_matrix <- as.dist(1 - cor_matrix)
+
+# Perform hierarchical clustering
+hc <- hclust(dist_matrix, method = "ward.D2")
+
+# Plot the dendrogram
+plot(hc, hang = -1, cex = 0.6, main = "Hierarchical Clustering of Assets")
+
+```
+####  Misc
+
+```r
+
+#returns_data <- Portf_wide[,-1]
+
+# Specify a multivariate GARCH model - DCC GARCH
+#uspec <- ugarchspec(mean.model = list(armaOrder = c(1, 1)), variance.model = list(garchOrder = c(1, 1), model = "sGARCH"))
+#spec <- dccspec(uspec = multispec(replicate(ncol(returns_data), uspec)), dccOrder = c(1, 1), distribution = "mvnorm")
+
+# Fit the DCC GARCH model
+#fit <- dccfit(spec, data = returns_data)
+
+# Extract conditional correlations
+#conditional_correlations <- rcov(fit)
+
+# Example: accessing the correlation matrix at the first time point
+#conditional_correlations[,,1]
+
+
+```
 
 ### Some pitfalls along the way:
 - In general not many issues with this question.
