@@ -143,8 +143,28 @@ The following section explains step by step how the problem in question 1 was ap
 3. **Rolling Returns Performance:** How significantly do management and performance fees impact the net returns of the AI Implementer fund compared to the benchmark and peers?
 4. **Correlations:** What is the correlation between benchmark and the performance of the AI Implementer fund?
 
-### Code:
+### Code Summary:
 
+1. **Data Preparation:**
+   - Filters and selects actively managed funds from the ASISA dataset.
+   - Calculates average returns for active funds and adjusts them for fees.
+   - Randomly samples four active funds and prepares AI and Benchmark datasets.
+   - Merges all prepared datasets for analysis.
+
+2. **Data Inspection:**
+   - Conducts basic data inspection and generates statistics for analysis.
+
+3. **Boxplot Visualization:**
+   - Creates a boxplot to compare fund returns, highlighting the median of the AI Implementer fund.
+
+4. **Scatterplot Visualization:**
+   - Constructs a scatterplot to compare fund returns against the benchmark, showing outperformance percentages.
+
+5. **Cumulative Returns Visualization:**
+   - Plots the growth of $1 invested over time for the selected funds.
+
+6. **Rolling Returns Visualization:**
+   - Displays 3-year rolling annual returns for the chosen funds.
 
 #### Data operations:
 
@@ -209,6 +229,15 @@ Rets_long_cum <- Rets_long %>%
   mutate(Cumulative_Returns = cumprod(1 + Returns)) %>%
   ungroup()
 
+#   Calculate 3 year rolling returns
+Rets_rolling <- 
+Rets_long %>% group_by(Fund) %>% 
+# Epic sorcery:
+mutate(RollRets = RcppRoll::roll_prod(1 + Returns, 36, fill = NA, 
+    align = "right")^(12/36) - 1) %>% 
+group_by(date) %>% filter(any(!is.na(RollRets))) %>% 
+ungroup()
+
 #   Comparing Funds against the Benchmark
 
 # Prepare BM_all
@@ -228,6 +257,7 @@ Funds_all <- bind_rows(merge_AI, merge_ASISA)
 
 ```
 
+
 #### Data Inspection:
 
 ```r
@@ -245,10 +275,7 @@ print(tablestats[,1:7])
 ```r
 
 # Calculate the median for the AI fund
-
 ai_median <- median(Rets_wide$`AI Implementer`, na.rm = TRUE)
-
-# Create the boxplot
 
 boxplot <- Rets_long %>% 
     ggplot(aes(x = Fund, y = Returns, fill = Fund)) +
@@ -268,22 +295,62 @@ ggsave("Figures/boxplot.png", plot = boxplot)
 
 ```
 
+
+
 ```r
 
-# Create the scatter plot
+calculate_performance <- function(data, fund_name) {
+    # Calculate the number of instances of outperformance
+    outperform <- data %>%
+        filter(Fund == fund_name & Returns > Benchmark) %>%
+        nrow()
 
+    # Calculate the number of instances of underperformance
+    underperform <- data %>%
+        filter(Fund == fund_name & Returns < Benchmark) %>%
+        nrow()
+
+    # Calculate the percentage of outperformance
+    perform_percentage <- outperform / (outperform + underperform) * 100
+
+    # Return the formatted percentage as a string
+    rounded_performance <- round(perform_percentage, 2)
+    return(paste0(rounded_performance, "%"))
+}
+
+
+performance_active <- calculate_performance(Funds_all, "Actively Managed")
+performance_ai <- calculate_performance(Funds_all, "AI Implementer")
+
+# Create the scatter plot
 scatplot <- Funds_all %>% 
     ggplot(aes(x = Benchmark, y = Returns, color = Fund)) +
+        # Shading triangles
+        geom_ribbon(aes(ymin = -Inf, ymax = Benchmark), fill = "#C93D44", alpha = 0.2) +
+        geom_ribbon(aes(ymin = Benchmark, ymax = Inf), fill = "#75A21B", alpha = 0.2) +
         geom_point(size = 1) +  # Add points
         geom_abline(slope = 1, intercept = 0, linetype = "dashed") +  # 45-degree line
         geom_smooth(method = "lm", formula = y ~ x, aes(group = Fund), se = FALSE) +  # Ab-lines
         scale_color_manual(values = palette) +
         labs(title = "Comparison of Fund Returns* vs. Benchmark",
-             subtitle = "Dashed line represents a 45º-line, indicating a 1-to-1 correlation between\nfund returns and benchmark.",
+             subtitle = "Dashed line represents a 45º-line, indicating a 1-to-1 correlation between\nfund returns and benchmark. Actively managed funds outperform the\nbenchmark 44.57% of the time, while AI Implementer outperforms\n57.43% of the time.",
              caption = "*After fees (Management fee is 100bps)",
              x = "Benchmark Returns",
              y = "Fund Returns",
-             color = "Fund Type") + th
+             color = "Fund Type") + th +
+    annotate("text", x = -0.08, y = 0.15, label = "Outperform Benchmark", hjust = 0.5, family= "Palatino") +
+    annotate("text", x = 0.08, y = -0.15, label = "Underperform Benchmark", hjust = 0.5, family= "Palatino")
+
+
+
+# Add labels to the plot
+scatplot <- scatplot 
+
+# Here, x_position, y_position_1, and y_position_2 are the coordinates where you want to place the labels.
+# You need to adjust these based on your plot's scale and layout.
+
+# Now, you can view or save your plot
+print(scatplot)
 
 ggsave("Figures/scatplot.png", plot = scatplot)
 
@@ -291,9 +358,6 @@ ggsave("Figures/scatplot.png", plot = scatplot)
 
 
 ```r
-
-# Create the cumulative returns plot
-
 cumplot <- Rets_long_cum %>% 
     #filter(Fund == "Active Avg" | Fund == "AI Implementer" | Fund == "Benchmark") %>% 
     ggplot(aes(x = date, y = Cumulative_Returns, color = Fund)) +
@@ -308,6 +372,24 @@ cumplot <- Rets_long_cum %>%
       th
 
 ggsave("Figures/cumplot.png", plot = cumplot)
+
+```
+
+```r
+rollplot <- Rets_rolling %>% 
+    #filter(Fund == "Active Avg" | Fund == "AI Implementer" | Fund == "Benchmark") %>% 
+    ggplot(aes(x = date, y = RollRets, color = Fund)) +
+      geom_line(size = 0.8) +
+      scale_color_manual(values = palette) +
+      labs(title = "3-Year Rolling Annual Returns* for Selected Funds",
+           caption = "*After fees (Management fee is 100bps)",
+           x = "",
+           y = "Rolling 3 year Returns (Ann.)",
+           color = "Fund") +
+      scale_y_continuous(labels = scales::percent_format(scale = 100)) +
+      th
+
+ggsave("Figures/rollplot.png", plot = rollplot)
 
 ```
 
@@ -375,7 +457,7 @@ To replicate the study and compare a hedged and unhedged portfolio, we'll need t
 - Compare these volatilities over time to analyze the impact of hedging.
 - Calculate return metrics.
 
-### Code:
+### Code Summary:
 
 1. **Data Loading**: Imported data from `Cncy_Hedge_Assets.rds` and `Monthly_zar.rds`, standardizing date formats for consistency.
 
@@ -621,7 +703,7 @@ This question is stored in `WRITE-UPS`->`Question-3`. The following section expl
 
 3. **Capping Levels and Index Performance**: What are the effects of different capping levels on the diversification and performance of the ALSI and SWIX indexes?
 
-### Code:
+### Code Summary:
 
 1. **Data Handling:**
    - We load ALSI, rebalance days (RebDays), and ZAR exchange rate (ZAR) data.
@@ -928,7 +1010,7 @@ This question is stored in `WRITE-UPS`->`Question-4`. The following section expl
 ### The folllowing questions guide the analysis:
 
 
-### Code:
+### Code Summary:
 
 
 #### Data operations:
@@ -978,7 +1060,7 @@ This question is stored in `WRITE-UPS`->`Question-6`. The following section expl
 3. **How do correlations between different assets in the portfolio evolve and influence portfolio diversification?**
    - The focus here is on understanding asset correlations through hierarchical clustering and potentially GARCH models (though the latter was left out), which helps in identifying asset classes or groups with similar return characteristics for better diversification strategies.
 
-### Code:
+### Code Summary:
 In the provided code, the main operations include:
 
 1. **Filtering Assets**: Assets with less than three years of data are removed to ensure a stable analysis base.
