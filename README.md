@@ -6,11 +6,11 @@ This repository contains the materials for the Financial Econometrics 871 practi
 - Done:
   -  Q1
   -  Q2
+  -  Q4
   -  Q6
 - To do:
   -  Q3 Write-up
   -  Maybe check Q2 for additional writing
-  -  Q4
   -  Q5
 
 ##  Note on question documentation:
