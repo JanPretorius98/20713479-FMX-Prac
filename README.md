@@ -1017,6 +1017,26 @@ This question is stored in `WRITE-UPS`->`Question-4`. The following section expl
 
 ### The folllowing questions guide the analysis:
 
+1. **Does Past Performance Affect Future Fund Flows?**
+   - This question seeks to understand whether there is a persistent trend where funds that performed well in the past continue to attract more investment in subsequent periods.
+
+2. **How Do Funds Categorized by Performance (Top, Middle, Bottom) Differ in Terms of Subsequent Flows?**
+   - This involves analyzing whether top-performing funds (based on rolling returns) consistently receive higher investment flows compared to middle or bottom-tier funds.
+
+3. **How Do Actively Managed Funds Compare to a Benchmark?**
+   - The code assesses how actively managed funds perform relative to a specific benchmark (Capped SWIX), particularly focusing on the top and bottom performers in terms of beating the benchmark.
+
+4. **What is the Correlation Between Fund Returns and Future Fund Flows?**
+   - This question aims to quantify the relationship between the returns of a fund and the investment flows it receives in future periods, exploring different time lags (1 month, 3 months, 1 year, etc.).
+
+5. **Do Investment Strategies Focused on Chasing Winners Outperform Those That Do Not?**
+   - This involves analyzing the performance of funds that have consistently outperformed the benchmark (chasing winners) versus those that haven’t, to understand the implications of different investment strategies.
+
+6. **What is the Impact of Fund Performance on Future Flows in Different Time Frames?**
+   - This question seeks to understand how the timing of fund flows is affected by past performance, considering short-term (1 month), medium-term (1 year), and long-term (up to 5 years) periods.
+
+7. **Is the Persistence of Investment Flows Into Winners More Pronounced Than Into Losers?**
+   - This question examines whether the trend of investing in past winners is more pronounced compared to investing in past losers, particularly in terms of the magnitude and duration of fund flows.
 
 ### Code Summary:
 
