@@ -411,7 +411,7 @@ ggsave("Figures/rollplot.png", plot = rollplot)
 
 ##  Question 2
 
-This question is stored in `WRITE-UPS`->`Question-2`. The following section explains step by step how the problem in question 1 was approached. This section also contains code chunks used in the creation of the write-up document.
+This question is stored in `WRITE-UPS`->`Question-2`. The following section explains step by step how the problem in question 2 was approached. This section also contains code chunks used in the creation of the write-up document.
 
 ### The folllowing questions guide the analysis:
 
@@ -701,7 +701,7 @@ ggplot(volatility_data, aes(x = Structure, y = RollingVolatility, fill = Structu
 
 ##  Question 3
 
-This question is stored in `WRITE-UPS`->`Question-3`. The following section explains step by step how the problem in question 1 was approached. This section also contains code chunks used in the creation of the write-up document.
+This question is stored in `WRITE-UPS`->`Question-3`. The following section explains step by step how the problem in question 3 was approached. This section also contains code chunks used in the creation of the write-up document.
 
 ### The folllowing questions guide the analysis:
 
@@ -1013,7 +1013,7 @@ gt(cor_df) %>%
 
 ##  Question 4
 
-This question is stored in `WRITE-UPS`->`Question-4`. The following section explains step by step how the problem in question 1 was approached. This section also contains code chunks used in the creation of the write-up document.
+This question is stored in `WRITE-UPS`->`Question-4`. The following section explains step by step how the problem in question 4 was approached. This section also contains code chunks used in the creation of the write-up document.
 
 ### The folllowing questions guide the analysis:
 
@@ -1054,7 +1054,7 @@ This question is stored in `WRITE-UPS`->`Question-4`. The following section expl
 
 ##  Question 5
 
-This question is stored in `WRITE-UPS`->`Question-5`. The following section explains step by step how the problem in question 1 was approached. This section also contains code chunks used in the creation of the write-up document.
+This question is stored in `WRITE-UPS`->`Question-5`. The following section explains step by step how the problem in question 5 was approached. This section also contains code chunks used in the creation of the write-up document.
 
 ### The folllowing questions guide the analysis:
 
@@ -1075,7 +1075,7 @@ This question is stored in `WRITE-UPS`->`Question-5`. The following section expl
 
 ##  Question 6
 
-This question is stored in `WRITE-UPS`->`Question-6`. The following section explains step by step how the problem in question 1 was approached. This section also contains code chunks used in the creation of the write-up document.
+This question is stored in `WRITE-UPS`->`Question-6`. The following section explains step by step how the problem in question 6 was approached. This section also contains code chunks used in the creation of the write-up document.
 
 ### The folllowing questions guide the analysis:
 
