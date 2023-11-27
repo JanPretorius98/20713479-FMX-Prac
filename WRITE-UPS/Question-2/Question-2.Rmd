@@ -272,6 +272,10 @@ ggplot(combined_portfolio, aes(x = date, y = RollingVolatility, color = Structur
 
 ```
 
+The figure above presents a comparison of 36-month rolling volatility between hedged and unhedged portfolio structures. The two portfolios track closely together throughout the timeline, with the unhedged portfolio exhibiting slightly higher volatility at various points. Notably, both portfolios experience a sharp rise in volatility around 2020, likely reflecting the increased market uncertainty during that period. The convergence of the two lines for most of the observed period suggests that currency hedging may not significantly reduce portfolio volatility over a longer time horizon.
+
+
+
 ```{r histogram}
 
 volatility_data <- combined_portfolio %>%
@@ -288,6 +292,8 @@ ggplot(volatility_data, aes(x = RollingVolatility, fill = Structure)) +
 
 ```
 
+The histogram above compares the distribution of 36-month rolling volatility for hedged and unhedged portfolios. Both distributions appear to have a similar central tendency, but the unhedged portfolio displays a slightly wider spread, indicating more frequent occurrences of higher volatility levels. The hedged portfolio's distribution is slightly skewed towards lower volatility levels, suggesting that while hedging may not drastically reduce overall volatility, it might limit the frequency of higher volatility outcomes. Despite this, there's considerable overlap in the volatility distributions of both strategies, reinforcing the conclusion that the benefits of hedging in terms of reducing volatility may be marginal.
+
 
 ```{r}
 
@@ -303,4 +309,8 @@ ggplot(volatility_data, aes(x = Structure, y = RollingVolatility, fill = Structu
   th
 
 ```
+The Violin Plot of 36-Month Rolling Volatility indicates that both hedged and unhedged portfolios have a similar central volatility frequency, but the unhedged portfolio exhibits a slightly wider distribution, suggesting more frequent high volatility occurrences. The symmetry of both distributions implies a balanced spread of volatility around the median, and the presence of outliers shows that extreme values were present in both portfolios, though marginally more pronounced in the unhedged portfolio. Overall, the plot suggests that while hedging might slightly constrain volatility, both strategies experience a comparable range of volatility over the long term.
 
+# Conclusion
+
+The results demonstrate that the decision to hedge a portfolio does not consistently lead to significant differences in performance or risk metrics over time. The cumulative and rolling returns, alongside the scatter plot analysis, suggest that hedging's influence is nuanced, with periods of outperformance and underperformance that tend to cancel each other out in the long run. Furthermore, volatility assessments, encompassing downside risk measures and the distribution of rolling volatilities, reveal that hedging may slightly reduce the frequency of high volatility instances without drastically altering the overall risk-return profile. These findings highlight the importance of aligning hedging strategies with an investor's specific objectives and risk appetite, rather than a one-size-fits-all approach, as the benefits of hedging appear to be context-dependent and marginal when viewed through the lens of an extended investment timeline.
