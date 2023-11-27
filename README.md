@@ -1890,7 +1890,8 @@ Roll_optimizer <- function(return_mat, EOQ_datevec, LookBackSel = 36){
 
 ## Documentation
 
-Links to further documentation, if available.
+Links to further documentation:
+- SA's main trading partners (For Q5): https://www.sars.gov.za/customs-and-excise/trade-statistics/
 
 ---
 
