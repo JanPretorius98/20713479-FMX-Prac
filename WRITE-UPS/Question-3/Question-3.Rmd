@@ -390,3 +390,6 @@ cumulative_returns <- cumulative_returns %>%
 ```
 
 
+# Conclusion
+
+The analysis of the ALSI (J203) and SWIX (J403) indices demonstrates that while there are overarching similarities in sector weights and responses to exchange rate movements, subtle differences in their compositions and return profiles exist. Large-cap stocks have a significant impact on cumulative returns within both indices, but exhibit lower volatility compared to mid and small-cap stocks. The negative correlation with the exchange rate, more pronounced in the J403, suggests that returns are somewhat influenced by currency performance, albeit weakly. These insights highlight the nuanced distinctions between the indices and can inform investors about the underlying dynamics affecting index performance in relation to currency fluctuations.

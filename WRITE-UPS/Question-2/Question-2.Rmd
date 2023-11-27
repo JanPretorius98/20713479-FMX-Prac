@@ -2,7 +2,7 @@
 # Basic template for FMX Prac:
 
 title: "Question 2: Currency Hedging Analysis"
-subtitle: "Question 2: SCurrency Hedging Analysis"
+subtitle: "Question 2: Currency Hedging Analysis"
 
 documentclass: "elsarticle"
 

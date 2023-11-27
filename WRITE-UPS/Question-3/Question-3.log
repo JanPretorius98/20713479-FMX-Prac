@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.25)  27 NOV 2023 04:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.25)  27 NOV 2023 04:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -631,7 +631,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <10.95> on input line 208.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <8> on input line 208.
-<Question-3_files/figure-latex/203roll-ret-1.pdf, id=20, 469.755pt x 433.62pt>
+<Question-3_files/figure-latex/203roll-ret-1.pdf, id=24, 469.755pt x 433.62pt>
 File: Question-3_files/figure-latex/203roll-ret-1.pdf Graphic file (type pdf)
 <use Question-3_files/figure-latex/203roll-ret-1.pdf>
 Package pdftex.def Info: Question-3_files/figure-latex/203roll-ret-1.pdf  used on input line 253.
@@ -640,7 +640,7 @@ Package pdftex.def Info: Question-3_files/figure-latex/203roll-ret-1.pdf  used o
 
 
 {/Users/janhendrikpretorius/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}]
-<Question-3_files/figure-latex/403roll-ret-1.pdf, id=36, 469.755pt x 433.62pt>
+<Question-3_files/figure-latex/403roll-ret-1.pdf, id=40, 469.755pt x 433.62pt>
 File: Question-3_files/figure-latex/403roll-ret-1.pdf Graphic file (type pdf)
 <use Question-3_files/figure-latex/403roll-ret-1.pdf>
 Package pdftex.def Info: Question-3_files/figure-latex/403roll-ret-1.pdf  used on input line 266.
@@ -665,7 +665,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [3{/Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc} <./Question-3_files/figure-latex/403roll-ret-1.pdf>]
-<Question-3_files/figure-latex/unnamed-chunk-1-1.pdf, id=64, 433.62pt x 361.35pt>
+<Question-3_files/figure-latex/unnamed-chunk-1-1.pdf, id=68, 433.62pt x 361.35pt>
 File: Question-3_files/figure-latex/unnamed-chunk-1-1.pdf Graphic file (type pdf)
 <use Question-3_files/figure-latex/unnamed-chunk-1-1.pdf>
 Package pdftex.def Info: Question-3_files/figure-latex/unnamed-chunk-1-1.pdf  used on input line 346.
@@ -700,21 +700,21 @@ LaTeX2e <2023-11-01>
 L3 programming layer <2023-11-09>
  ***********
 Package rerunfilecheck Info: File `Question-3.out' has not changed.
-(rerunfilecheck)             Checksum: 5C2732014ED64B1001589847CA052BFC;545.
+(rerunfilecheck)             Checksum: 4F83C060CBD3A6C30355AB39E797C7F2;638.
  ) 
 Here is how much of TeX's memory you used:
- 16343 strings out of 476227
- 307770 string characters out of 5794748
+ 16347 strings out of 476227
+ 307812 string characters out of 5794748
  1931555 words of memory out of 5000000
- 38029 multiletter control sequences out of 15000+600000
+ 38031 multiletter control sequences out of 15000+600000
  611803 words of font info for 75 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  75i,12n,79p,547b,1068s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr9.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri7.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri9.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
-Output written on Question-3.pdf (6 pages, 610751 bytes).
+Output written on Question-3.pdf (6 pages, 611751 bytes).
 PDF statistics:
- 137 PDF objects out of 1000 (max. 8388607)
- 104 compressed objects within 2 object streams
- 21 named destinations out of 1000 (max. 500000)
- 48 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 142 PDF objects out of 1000 (max. 8388607)
+ 109 compressed objects within 2 object streams
+ 23 named destinations out of 1000 (max. 500000)
+ 56 words of extra memory for PDF output out of 10000 (max. 10000000)
 
