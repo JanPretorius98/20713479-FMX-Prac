@@ -101,9 +101,6 @@ ZAR <- read_rds(paste0(path, "DATA/", file))
 
 ## Project Organization
 
-### `DATA`:
-Contains all data files for the practical.
-
 ### `UTILITIES`:
 This folder houses external scripts that enhance functionality.
   - `aesthetics.R`: Provides a standardised plotting theme.
@@ -122,6 +119,9 @@ Stores all write-ups and documentation for questions.
   - `Basic-Question-Template`: A folder housing the template for basic questions.
   - `Presentation-Question-Template`: A folder housing template for presentations.
   - `Question-#`: Write-up and code for Questions
+
+### `MISC`:
+Miscellaneous files such us the schematic shown in Question 2.
   
 ### `LICENSE`:
 This project is licensed under the MIT License, which is a highly permissive and flexible open-source license.
