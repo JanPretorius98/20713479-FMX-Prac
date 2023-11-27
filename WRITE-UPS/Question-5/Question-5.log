@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.25)  27 NOV 2023 12:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.25)  27 NOV 2023 13:11
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -669,7 +669,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 <Question-5_files/figure-latex/plot-gog-1.pdf, id=51, 433.62pt x 361.35pt>
 File: Question-5_files/figure-latex/plot-gog-1.pdf Graphic file (type pdf)
 <use Question-5_files/figure-latex/plot-gog-1.pdf>
-Package pdftex.def Info: Question-5_files/figure-latex/plot-gog-1.pdf  used on input line 261.
+Package pdftex.def Info: Question-5_files/figure-latex/plot-gog-1.pdf  used on input line 272.
 (pdftex.def)             Requested size: 433.61894pt x 361.34912pt.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -682,9 +682,8 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 <Question-5_files/figure-latex/heat-map-1.pdf, id=67, 433.62pt x 361.35pt>
 File: Question-5_files/figure-latex/heat-map-1.pdf Graphic file (type pdf)
 <use Question-5_files/figure-latex/heat-map-1.pdf>
-Package pdftex.def Info: Question-5_files/figure-latex/heat-map-1.pdf  used on input line 263.
+Package pdftex.def Info: Question-5_files/figure-latex/heat-map-1.pdf  used on input line 287.
 (pdftex.def)             Requested size: 433.61894pt x 361.34912pt.
-No file Question-5.bbl.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -693,6 +692,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [5 <./Question-5_files/figure-latex/plot-gog-1.pdf>]
+No file Question-5.bbl.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -711,13 +711,13 @@ Package rerunfilecheck Info: File `Question-5.out' has not changed.
 Here is how much of TeX's memory you used:
  16285 strings out of 476227
  306988 string characters out of 5794748
- 1927555 words of memory out of 5000000
+ 1928555 words of memory out of 5000000
  37989 multiletter control sequences out of 15000+600000
  608439 words of font info for 73 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  75i,12n,79p,547b,902s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr9.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri7.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri9.pfb></Users/janhendrikpretorius/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
-Output written on Question-5.pdf (6 pages, 452318 bytes).
+Output written on Question-5.pdf (6 pages, 457351 bytes).
 PDF statistics:
  132 PDF objects out of 1000 (max. 8388607)
  96 compressed objects within 1 object stream

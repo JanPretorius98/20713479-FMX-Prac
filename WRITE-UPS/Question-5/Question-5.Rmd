@@ -224,7 +224,9 @@ ggplot(volatility_data, aes(x = Index, y = Volatility, color = Currency)) +
 
 ```
 
-Conditional volatility was also consistently higher.
+The graph above indicates the South African Rand (ZAR) experiences periods of higher volatility relative to its trading partners. These peaks suggest moments of economic stress or significant market events.
+
+A GO-GARCH model methodology was applied in the analysis and serves to investigate the dynamic relationships between the South African Rand (ZAR) and the currencies of the G10 countries. The GO-GARCH, or Generalized Orthogonal GARCH, is a sophisticated variant of the standard GARCH model which allows for the assessment of time-varying correlations among multiple time series. In this context, the model captures how the volatility of the ZAR co-moves with the volatility of the G10 currency basket over time.
 
 ```{r go-garch}
 
@@ -287,6 +289,9 @@ ggplot(gog.time.var.cor, aes(x = date, y = Rho, color = Pairs)) +
 
 ```
 
+The plot above illustrates the time-varying correlations between the South African Rand (ZAR) and G10 currencies from 2010 to 2020. The correlations fluctuate over time, displaying a range predominantly between 0.55 and 0.75. Notably, there are peaks where the correlation approaches 0.75, suggesting periods where the ZAR moved more in tandem with the G10 currencies, possibly reflecting global economic events impacting markets uniformly.
+
+Conversely, the valleys indicate times when the ZAR had lower correlations with the G10 currencies, which could imply periods where local factors or idiosyncratic events had a greater impact on the ZAR's movement, making it less aligned with the G10 currencies' trends.
 
 ```{r heat-map}
 
@@ -309,3 +314,8 @@ ggplot(heatmap_data, aes(x = date, y = Pairs, fill = Value)) +
 
 ```
 
+The heatmap depicts the time-varying correlations between the South African Rand (ZAR) and G10 currencies from 2010 to around 2020. The color gradient represents the strength of the correlation, where shades closer to white denote a correlation near zero (indicating no relationship), and darker shades, either red or blue, indicate stronger positive or negative correlations respectively.
+
+In this heatmap, however, the color gradient seems to be on a scale from light to dark pink, suggesting that the correlations are predominantly positive throughout the period. The intensity of the pink shade varies over time, implying fluctuations in the degree of correlation. The consistent presence of color, without reverting to white, indicates that the ZAR generally maintains some level of positive correlation with the G10 currencies during the given timeframe.
+
+There aren’t any dark red or blue patches, which would suggest extremely high or low correlations, and the lack of variability in color intensity indicates that while correlations fluctuate, they do so within a relatively narrow range. This pattern might suggest that while specific events or periods might affect the degree of co-movement between the ZAR and G10 currencies, the overall relationship remains relatively stable and positively correlated.
