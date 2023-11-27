@@ -125,6 +125,7 @@ This folder houses external scripts that enhance functionality.
   - `missing-values.R`: Provides the `impute_missing_returns` function.
   - `optim-foo-adj.R`: Uses quadratic programming to find the optimal weights for a portfolio based on expected returns, covariance, and constraints, returning the results as a table.
   - `optimise.R`:Optimizes portfolio weights based on input parameters such as expected returns and constraints. It handles errors and returns optimal weights for assets, considering various optimization types.
+  - `renaming-ddc.R`: rename the columns of a time-varying correlation matrix for financial data analysis and prepare the data for visualization by transforming it into a tidy format.
   - `roll-optimiser.R`: Optimizes portfolio weights using a rolling window approach, calculating optimal weights based on historical data and constraints. It returns the optimal weights for each rolling period.
 
 ### `WRITE-UPS`:
@@ -1244,25 +1245,267 @@ This question is stored in `WRITE-UPS`->`Question-5`. The following section expl
 
 ### The folllowing questions guide the analysis:
 
-1. How does the volatility of the ZAR compare to that of other major and emerging market currencies since 2015, and what implications does this have for its characterization as one of the most volatile currencies in recent years?
+1. How does the average volatility of the South African Rand (ZAR) compare with major trading partner currencies?
+2. How does the volatility of ZAR and major trading partner currencies change over time, especially after the Global Financial Crisis (GFC)?
+   - Here I looked at trade statistics to filter the data for trade partners (see "Links to Further Documentation")
+4. What are the conditional volatilities of each currency, including ZAR, using a GARCH(1,1) model?
+5. How do correlations between ZAR and G10 currencies vary over time, and can a GO-GARCH model capture these dynamics?
+6. What insights can be gained from visualizing time-varying correlations between ZAR and G10 currency pairs in a heatmap?
 
-2. In what manner has the ZAR's performance aligned with periods characterized by favorable conditions for G10 currency carry trades, and how does this relationship manifest when juxtaposed with the currency's valuation dynamics?
+### Code Summary:
 
-3. What is the nature of the correlation between the ZAR's strength and the periods of a robust US dollar? Does the empirical evidence suggest that the ZAR benefits during such phases, potentially indicating a broader 'risk-on' sentiment in the global markets?
+- **Data Preparation:**
+  - Loaded necessary libraries and set up the working environment.
+  - Loaded currency data and preprocessed it, including log returns calculation and standardization.
+  - Filtered for post-Global Financial Crisis (GFC) dates to focus on relevant data.
 
-4. Which statistical methods and visualization techniques can most effectively capture and convey the ZAR's volatility patterns, its performance during carry trade-favorable periods, and its relationship with the strength of the US dollar, providing a clear and comprehensive narrative of its behavior?
+- **Average Volatility Comparison:**
+  - Created a bar plot to compare the average volatility of the South African Rand (ZAR) with major trading partner currencies.
+  - Highlighted differences in average volatility using a color palette.
 
-### Code:
+- **Rolling Volatility Visualization:**
+  - Generated a line plot to visualize rolling volatility for both ZAR and major trading partner currencies.
+  - Calculated rolling volatility over a 30-day window to capture changes over time.
 
+- **GARCH(1,1) Model for Conditional Volatilities:**
+  - Applied a GARCH(1,1) model to estimate conditional volatilities for each currency, including ZAR.
+  - Plotted the results to visualize volatility evolution over time.
+
+- **GO-GARCH Model for Time-Varying Correlations:**
+  - Employed a GO-GARCH model to estimate time-varying correlations between ZAR and G10 currencies.
+  - Gained insights into the dynamics of correlations over time.
+
+- **Visualization of Time-Varying Correlations:**
+  - Created a line plot to visualize time-varying correlations between ZAR and G10 currencies.
+  - Adjusted the y-axis scale to focus on specific observations for clarity.
+
+- **Heatmap of Correlations:**
+  - Generated a heatmap to display time-varying correlations between ZAR and G10 currency pairs.
+  - Provided a comprehensive overview of correlation dynamics over time.
 
 #### Data operations:
 
+```r
+
+# Prepare the data for volatility comparison
+
+cncy <- cncy %>%
+  group_by(Name) %>%
+  arrange(date) %>% 
+  mutate(LogReturns = log(Price) - log(lag(Price))) %>%
+  mutate(ScaleRet = (LogReturns - mean(LogReturns, na.rm = T))) %>% 
+  filter(!is.na(LogReturns)) %>%
+  ungroup() %>% 
+  filter(date > as.Date("2008-12-31")) # Filter dates to reflect currency movements after GFC
+
+# Calculate the standard deviation as a measure of volatility
+cncy_volatility <- cncy %>%
+  group_by(Name) %>%
+  summarize(AvgVolatility = sd(LogReturns, na.rm = TRUE))
+
+# List of currencies to compare with ZAR
+currencies_to_compare <- c("SouthAfrica_Cncy", "EU_Cncy_Inv", "UK_Cncy_Inv", "China_Cncy", "Japan_Cncy", "India_Cncy")
+
+# Filter and calculate the standard deviation for each currency
+selected_currencies_volatility <- cncy %>%
+  filter(Name %in% currencies_to_compare) %>%
+  group_by(Name) %>%
+  summarize(AvgVolatility = sd(LogReturns, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define the rolling window size
+rolling_window <- 30  # e.g., 30-day rolling window
+
+# Calculate rolling volatility for each currency
+cncy_rolling_volatility <- cncy %>%
+  filter(Name %in% currencies_to_compare) %>%
+  group_by(Name) %>%
+  mutate(RollingVolatility = rollapply(LogReturns, width = rolling_window, FUN = sd, na.rm = TRUE, fill = NA, align = "right")) %>%
+  ungroup()
+
+```
+#### Modelling:
+
+```r
+# GARCH
+
+library(rugarch) # I define rugarch here because it messes with some of my other code if I define it in the libraries utility code
+library(rmgarch)
+
+# currencies_to_compare contains the list of currencies including ZAR
+# Function to fit GARCH(1,1) model and return conditional volatility
+fit_garch_model <- function(data, currency) {
+  returns <- na.omit(data %>% filter(Name == currency) %>% select(LogReturns))
+  spec <- ugarchspec(variance.model = list(model = "sGARCH", garchOrder = c(1, 1)),
+                     mean.model = list(armaOrder = c(0,0), include.mean = FALSE),
+                     distribution.model = "std")
+  fit <- ugarchfit(spec, returns$LogReturns)
+  return(sigma(fit))
+}
+
+# Apply the function to each currency
+volatility_list <- lapply(currencies_to_compare, function(currency) {
+  data <- fit_garch_model(cncy, currency)
+  data <- fortify(data)
+  data$Currency <- currency
+  return(data)
+})
+
+# Combine the volatility data into a single data frame
+volatility_data <- bind_rows(volatility_list)
+
+# Rename the 'data' column to 'Volatility' for clarity
+volatility_data <- volatility_data %>%
+  rename(Volatility = data)
+
+
+```
+
+```r
+# GO-GARCH
+
+G10_returns <- bbdxy %>% 
+    mutate(G10 = log(Price)-log(lag(Price))) %>% 
+    filter(date > dplyr::first(date)) %>% 
+    select(date, G10)
+
+# cncy is == to cncy_rts from the example code
+ZAR <- cncy %>% 
+  filter(Name == "SouthAfrica_Cncy") %>% 
+  rename("ZAR" = "LogReturns") %>% 
+  select(date, ZAR) 
+
+# Merge ZAR and G10 returns
+combined_returns <- left_join(G10_returns, ZAR, by = "date") %>% 
+    filter(date > as.Date("2008-12-31")) %>% 
+    tbl_xts()
+
+# Set up the univariate GARCH specifications
+uspec <- ugarchspec(variance.model = list(model = "gjrGARCH", garchOrder = c(1, 1)),
+                    mean.model = list(armaOrder = c(1, 0), include.mean = TRUE),
+                    distribution.model = "sstd")
+
+# Replicate the specification for each series in combined_returns
+multi_univ_garch_spec <- multispec(replicate(ncol(combined_returns), uspec))
+
+# GO-GARCH model specification
+spec.go <- gogarchspec(multi_univ_garch_spec, 
+                       distribution.model = 'mvnorm', # or 'manig'
+                       ica = 'fastica') # Using fastICA
+
+# Fit the GO-GARCH model
+fit.gogarch <- gogarchfit(spec.go, data = combined_returns, solver = 'hybrid')
+
+# Extract time-varying correlations
+gog.time.var.cor <- rcor(fit.gogarch)
+gog.time.var.cor <- aperm(gog.time.var.cor, c(3,2,1))
+dim(gog.time.var.cor) <- c(nrow(gog.time.var.cor), ncol(gog.time.var.cor)^2)
+gog.time.var.cor <- renamingdcc(ReturnSeries = combined_returns, DCC.TV.Cor = gog.time.var.cor)
+
+
+```
 
 #### Plotting:
 
+##### Bar plot
+```r
+palette2 <- c("#1F6F70","#1F6F70", "#1F6F70","#1F6F70","#C93D44","#1F6F70")
 
+# Visualize average volatility
+ggplot(selected_currencies_volatility, aes(x = reorder(Name, AvgVolatility), y = AvgVolatility, fill = Name)) +
+  geom_bar(stat = "identity", alpha = 0.6) +
+  labs(title = "Average Volatility Comparison of ZAR with\nMajor Trading Partners", 
+       x = "Currency", 
+       y = "Average Volatility (Standard Deviation)") +
+  coord_flip() +
+  scale_fill_manual(values = palette2) +
+  th +
+  theme(legend.position = "none")
+
+
+```
+##### Rolling volatility
+
+```r
+# Plot the rolling volatility
+ggplot(cncy_rolling_volatility, aes(x = date, y = RollingVolatility, color = Name)) +
+  geom_line(size = 0.5, alpha = 0.6) +
+  labs(title = paste0(rolling_window, "-Day Rolling Volatility* of ZAR and Major Trading\nPartners' Currencies"), 
+       x = "Date", 
+       y = "Rolling Volatility (Standard Deviation)",
+       subtitle = "ZAR Rolling Volatility Highlighted in Red",
+       caption = "*30-day Rolling Volatility") +
+  th +
+  scale_color_manual(values = palette2) +
+  theme(legend.position = "none")
+
+
+```
+##### GARCH
+
+```r
+
+# Plot the conditional volatilities
+ggplot(volatility_data, aes(x = Index, y = Volatility, color = Currency)) +
+  geom_line(size = 0.5, alpha = 0.6) +
+  labs(title = "Time-Varying Volatility of Currencies (GARCH Model)", 
+       x = "Date", 
+       y = "Conditional Volatility") +
+  th +
+  scale_color_manual(values = palette2) +
+  theme(legend.position = "none")
+
+```
+
+##### GO-GARCH
+
+```r
+palette3 <- c("grey", "grey", "#C93D44", "grey")
+
+# Plot the time-varying correlations
+ggplot(gog.time.var.cor, aes(x = date, y = Rho, color = Pairs)) +
+  geom_line() +
+  labs(title = "Time-Varying Correlations: ZAR with G10 Currencies",
+       x = "", 
+       y = "Correlation") +
+  th +
+  scale_y_continuous(limits = c(NA, 0.75)) + # I'm gonna be honest here: I don't know how to filter for specific observations in gog.time.var.cor, so I just adjust the axis scale 
+  scale_color_manual(values = palette3) +
+  theme(legend.position = "none")
+
+```
+
+##### Heatmap
+
+```r
+
+# Preparing the data
+heatmap_data <- gog.time.var.cor %>%
+  filter(grepl("ZAR_", Pairs), !grepl("_ZAR", Pairs)) %>%
+  gather(key = "Metric", value = "Value", -date, -Pairs)
+
+# Creating the heatmap
+ggplot(heatmap_data, aes(x = date, y = Pairs, fill = Value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "#1F6F70", high = "#C93D44", mid = "white", midpoint = 0.5,
+                       limit = c(-1, 1), space = "Lab", name="Correlation") +
+  labs(title = "Heatmap of Time-Varying Correlations: ZAR with\nG10 Currencies",
+       x = "", 
+       y = "Currency Pair") +
+  th +
+  theme(legend.position = "bottom")
+
+```
 
 ### Some pitfalls along the way:
+
+1. **Data Quality Issues:** Dealing with missing data and ensuring data consistency across different currency datasets required thorough data cleaning and imputation.
+
+2. **Model Complexity:** Implementing GARCH models and GO-GARCH models can be complex, and selecting appropriate model specifications and parameters required careful consideration.
+
+3. **Visualization Challenges:** Creating meaningful visualizations for time-varying correlations and rolling volatilities involved managing large datasets and ensuring clarity in the resulting plots.
+
+4. **Computation Time:** Running GARCH and GO-GARCH models on a large dataset can be computationally intensive, and optimizing code for efficiency was essential.
 
 ---
 
@@ -1280,6 +1523,8 @@ This question is stored in `WRITE-UPS`->`Question-6`. The following section expl
 
 3. **How do correlations between different assets in the portfolio evolve and influence portfolio diversification?**
    - The focus here is on understanding asset correlations through hierarchical clustering and potentially GARCH models (though the latter was left out), which helps in identifying asset classes or groups with similar return characteristics for better diversification strategies.
+  
+4. **Garch libraries**: `rugarch` and `rmgarch` created some problems with other libraries. They were loaded independently of other projects during the exam to ensure consistency.
 
 ### Code Summary:
 In the provided code, the main operations include:
@@ -1408,6 +1653,7 @@ Portf_Weights <-
 ```
 
 #### Plotting:
+
 ```r
 
 EOQ_datevec <- Portf_wide %>%
@@ -1432,6 +1678,8 @@ head(Lookback_24, 13) %>%
 
 
 ```
+
+
 ```r
 
 ggplot(Lookback_24, aes(x = date, y = weight, fill = stocks)) +
@@ -1505,7 +1753,7 @@ plot(hc, hang = -1, cex = 0.6, main = "Hierarchical Clustering of Assets")
 
 The following section shows the code used in the UTILITIES folder (in alphabetical order):
 
-### `aesthetics.R`
+### `aesthetics.R`:
 
 ```r
 #   Goal: Creating themes and aesthetics for plots.
@@ -1550,7 +1798,7 @@ th <- theme(
 )
 
 ```
-### `calc-portfolio-ret.R`
+### `calc-portfolio-ret.R`:
 
 ```r
 # Goal: Calculate portfolio return by reweigthing
@@ -1633,7 +1881,7 @@ calculatePortfolioReturns <- function(Indexes, RebMonths) {
 
 ```
 
-### `capping.R`
+### `capping.R`:
 
 ```r
 #   Goal: Creating themes and aesthetics for plots.
@@ -1678,7 +1926,7 @@ th <- theme(
 )
 ```
 
-### `fee_converter.R`
+### `fee_converter.R`:
 
 ```r
 
@@ -1701,7 +1949,7 @@ fee_converter <- function(stock_returns, annual_fee) {
 
 ```
 
-### `libraries.R`
+### `libraries.R`:
 
 ```r
 
@@ -1723,7 +1971,7 @@ pacman::p_load(dplyr,
 
 ```
 
-### `missing-values.R`
+### `missing-values.R`:
 
 ```r
 
@@ -1803,7 +2051,7 @@ impute_missing_returns <- function(return_mat, impute_returns_method = "NONE"){
 
 
 ```
-### `optim-foo-adj.R`
+### `optim-foo-adj.R`:
 
 ```r
 
@@ -1822,7 +2070,7 @@ optim_foo_adj <- function(Mu, Sigma, LB, UB, Amat, bvec, meq){
 
 ```
 
-### `optimise.R`
+### `optimise.R`:
 
 ```r
 # Goal optimise portfolio
@@ -1861,7 +2109,48 @@ optim_foo <- function(Type = "mv", mu, Sigma, LB, UB, printmsg = TRUE){
 
 ```
 
-### `roll-optimiser.R`
+### `renaming-ddc.R`:
+
+```r
+
+renamingdcc <- function(ReturnSeries, DCC.TV.Cor) {
+  
+  ncolrtn <- ncol(ReturnSeries)
+  namesrtn <- colnames(ReturnSeries)
+  paste(namesrtn, collapse = "_")
+  
+  nam <- c()
+  xx <- mapply(rep, times = ncolrtn:1, x = namesrtn)
+  # Now let's be creative in designing a nested for loop to save the names corresponding to the columns of interest..
+  
+  # TIP: draw what you want to achieve on a paper first. Then apply code.
+  
+  # See if you can do this on your own first.. Then check vs my solution:
+  
+  nam <- c()
+  for (j in 1:(ncolrtn)) {
+    for (i in 1:(ncolrtn)) {
+      nam[(i + (j-1)*(ncolrtn))] <- paste(xx[[j]][1], xx[[i]][1], sep="_")
+    }
+  }
+  
+  colnames(DCC.TV.Cor) <- nam
+  
+  # So to plot all the time-varying correlations wrt SBK:
+  # First append the date column that has (again) been removed...
+  DCC.TV.Cor <-
+    data.frame( cbind( date = index(ReturnSeries), DCC.TV.Cor)) %>% # Add date column which dropped away...
+    mutate(date = as.Date(date)) %>%  tbl_df()
+  
+  DCC.TV.Cor <- DCC.TV.Cor %>% gather(Pairs, Rho, -date)
+  
+  DCC.TV.Cor
+  
+}
+
+```
+
+### `roll-optimiser.R`:
 
 ```r
 
