@@ -1244,6 +1244,13 @@ This question is stored in `WRITE-UPS`->`Question-5`. The following section expl
 
 ### The folllowing questions guide the analysis:
 
+1. How does the volatility of the ZAR compare to that of other major and emerging market currencies since 2015, and what implications does this have for its characterization as one of the most volatile currencies in recent years?
+
+2. In what manner has the ZAR's performance aligned with periods characterized by favorable conditions for G10 currency carry trades, and how does this relationship manifest when juxtaposed with the currency's valuation dynamics?
+
+3. What is the nature of the correlation between the ZAR's strength and the periods of a robust US dollar? Does the empirical evidence suggest that the ZAR benefits during such phases, potentially indicating a broader 'risk-on' sentiment in the global markets?
+
+4. Which statistical methods and visualization techniques can most effectively capture and convey the ZAR's volatility patterns, its performance during carry trade-favorable periods, and its relationship with the strength of the US dollar, providing a clear and comprehensive narrative of its behavior?
 
 ### Code:
 
