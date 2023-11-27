@@ -1023,32 +1023,218 @@ This question is stored in `WRITE-UPS`->`Question-4`. The following section expl
 2. **How Do Funds Categorized by Performance (Top, Middle, Bottom) Differ in Terms of Subsequent Flows?**
    - This involves analyzing whether top-performing funds (based on rolling returns) consistently receive higher investment flows compared to middle or bottom-tier funds.
 
-3. **How Do Actively Managed Funds Compare to a Benchmark?**
-   - The code assesses how actively managed funds perform relative to a specific benchmark (Capped SWIX), particularly focusing on the top and bottom performers in terms of beating the benchmark.
-
-4. **What is the Correlation Between Fund Returns and Future Fund Flows?**
+3. **What is the Correlation Between Fund Returns and Future Fund Flows?**
    - This question aims to quantify the relationship between the returns of a fund and the investment flows it receives in future periods, exploring different time lags (1 month, 3 months, 1 year, etc.).
 
-5. **Do Investment Strategies Focused on Chasing Winners Outperform Those That Do Not?**
-   - This involves analyzing the performance of funds that have consistently outperformed the benchmark (chasing winners) versus those that haven’t, to understand the implications of different investment strategies.
-
-6. **What is the Impact of Fund Performance on Future Flows in Different Time Frames?**
+4. **What is the Impact of Fund Performance on Future Flows in Different Time Frames?**
    - This question seeks to understand how the timing of fund flows is affected by past performance, considering short-term (1 month), medium-term (1 year), and long-term (up to 5 years) periods.
 
-7. **Is the Persistence of Investment Flows Into Winners More Pronounced Than Into Losers?**
-   - This question examines whether the trend of investing in past winners is more pronounced compared to investing in past losers, particularly in terms of the magnitude and duration of fund flows.
 
 ### Code Summary:
+
+1. **Data Merging and Cleaning**: The code begins by joining two datasets, `Rets` and `Flows`, on multiple keys and filters out Funds of Funds and index funds to focus on actively managed funds.
+
+2. **Rolling Return Calculation**: It calculates 3-year rolling returns for each fund, providing an annualized metric of past performance.
+
+3. **Performance Categorization**: Funds are categorized based on their rolling returns into Top, Middle, and Bottom performance groups.
+
+4. **Future Flows Calculation**: The code generates lead variables to examine fund flows at different future time points—1 month, 6 months, 1 year, 2 years, and 3 years after the performance measurement.
+
+5. **Correlation Analysis**: A custom function calculates the correlation between rolling returns and future flows at each time lag, quantifying the relationship between past performance and future investment behavior.
+
+6. **Statistical Testing**: The `cor.test` function is employed to determine the statistical significance of the observed correlations.
+
+7. **Data Visualization**: Several `ggplot2` visualizations are produced to illustrate the trends in rolling returns and fund flows over time, and the correlations between them.
+
+8. **Table Generation**: Results from the correlation tests are neatly compiled into a `gt` table, offering a clear and professional presentation of the findings.
 
 
 #### Data operations:
 
+```r
+
+# Joining the Flows and Rets datasets
+ASISA <- left_join(Rets, Flows, by = c("date", "Fund", "FoF", "Index")) %>%
+    filter(FoF == "No" & Index == "No") %>%
+    select(-FoF, -Index)
+
+ASISA_rollret <- ASISA %>%
+  arrange(Fund, date) %>%  # Arrange by Fund and then by date
+  group_by(Fund) %>%
+  mutate(RollRets = (roll_prod(1 + Returns, 36, fill = NA, align = "right"))^(1/3) - 1) %>%
+  ungroup() %>%
+  group_by(date) %>%
+  filter(any(!is.na(RollRets))) %>%  # Filter dates where at least one fund has a valid rolling return
+  arrange(date, desc(RollRets)) %>%
+  # categorise performance
+  mutate(PerformanceIndicator = case_when(
+    row_number() <= n() / 3 ~ "Top",
+    row_number() <= 2 * n() / 3 ~ "Middle",
+    row_number() > 2 * n() / 3 ~ "Bottom",
+    TRUE ~ NA_character_)) %>%
+  ungroup()
+
+# Calculate Lead Flows
+ASISA_rollret <- ASISA_rollret %>%
+  group_by(Fund) %>%
+  mutate(NextPeriodFlows = lead(Flows, 1)) %>%
+  ungroup()
+
+# Aggregate Flows by Performance Category
+ASISA_flows_by_category <- ASISA_rollret %>%
+  group_by(date, PerformanceIndicator) %>%
+  summarize(TotalFlows = sum(NextPeriodFlows, na.rm = TRUE),
+            AvgFlows = mean(NextPeriodFlows, na.rm = TRUE),
+            MedianFlows = median(NextPeriodFlows, na.rm = TRUE)) %>%
+  ungroup()
+
+# Calculate Lead Flows
+ASISA_rollret <- ASISA_rollret %>%
+  arrange(Fund, date) %>%
+  group_by(Fund) %>%
+  mutate(
+    Flows_next_month = lead(Flows, 1),
+    Flows_in_6_months = lead(Flows, 6),
+    Flows_next_year = lead(Flows, 12),
+    Flows_in_2_years = lead(Flows, 24),
+    Flows_in_3_years = lead(Flows, 36)
+  ) %>%
+  ungroup()
+
+# Calculate Correlation
+correlation_analysis <- function(rollret_df, lag_column) {
+  cor_data <- rollret_df %>%
+    filter(!is.na(RollRets), !is.na({{ lag_column }})) %>%
+    summarize(correlation = cor(RollRets, {{ lag_column }}, use = "complete.obs"))
+  return(cor_data)
+}
+
+# Correlations for different lags
+correlation_next_month <- correlation_analysis(ASISA_rollret, Flows_next_month)
+correlation_6_months <- correlation_analysis(ASISA_rollret, Flows_in_6_months)
+correlation_next_year <- correlation_analysis(ASISA_rollret, Flows_next_year)
+correlation_2_years <- correlation_analysis(ASISA_rollret, Flows_in_2_years)
+correlation_3_years <- correlation_analysis(ASISA_rollret, Flows_in_3_years)
+
+```
 
 #### Plotting:
 
+```r
 
+ggplot(ASISA_rollret, aes(x = date, y = RollRets, color = PerformanceIndicator)) +
+  geom_line() +
+  labs(title = "Rolling Returns Over Time by Performance Category",
+       x = "",
+       y = "Rolling 3-Year Returns (Ann.)",
+       color = "Performance Category") +
+  th +
+  scale_color_manual(values = palette)
+
+
+```
+
+```r
+ASISA_flows_by_category %>% 
+    filter(date < as.Date("2020-06-01")) %>% 
+    mutate(AvgFlows = AvgFlows/1000000) %>%  # just to make the plot prettier
+ggplot(aes(x = date, y = AvgFlows, color = PerformanceIndicator)) +
+  geom_point(alpha = 0.6, size = 0.5) +
+  geom_line(size=0.2, alpha=0.6) +
+  labs(title = "Average Fund Flows by Performance Category",
+       x = "",
+       y = "Average Fund Flows (millions)") +
+    geom_smooth(method = "loess", se = FALSE, size = 1)+
+  scale_color_manual(values = palette) +
+  th
+
+
+```
+
+```r
+
+# Function to perform cor.test and extract results
+perform_cor_test <- function(data, return_col, flow_col, time_lag_description) {
+  test_result <- cor.test(data[[return_col]], data[[flow_col]], use = "complete.obs")
+  tibble(
+    Time_Lag = time_lag_description,
+    Correlation_Coefficient = test_result$estimate,
+    P_Value = test_result$p.value,
+    Confidence_Interval_Lower = test_result$conf.int[1],
+    Confidence_Interval_Upper = test_result$conf.int[2]
+  )
+}
+
+# Run the cor.test for different lags and bind the results
+cor_test_results <- bind_rows(
+  perform_cor_test(ASISA_rollret, "RollRets", "Flows_next_month", "Next Month"),
+  perform_cor_test(ASISA_rollret, "RollRets", "Flows_in_6_months", "In 6 Months"),
+  perform_cor_test(ASISA_rollret, "RollRets", "Flows_next_year", "Next Year"),
+  perform_cor_test(ASISA_rollret, "RollRets", "Flows_in_2_years", "In 2 Years"),
+  perform_cor_test(ASISA_rollret, "RollRets", "Flows_in_3_years", "In 3 Years")
+)
+
+# Create a gt table from the results
+cor_test_results_table <- cor_test_results %>%
+  gt() %>%
+  tab_header(
+    title = "Correlation Between Rolling Returns and Future Fund Flows"
+  ) %>%
+  fmt_number(
+    columns = vars(Correlation_Coefficient, P_Value, Confidence_Interval_Lower, Confidence_Interval_Upper),
+    decimals = 3
+  ) %>%
+  cols_label(
+    Time_Lag = "Time Lag",
+    Correlation_Coefficient = "Correlation",
+    P_Value = "p-value",
+    Confidence_Interval_Lower = "95% CI Lower",
+    Confidence_Interval_Upper = "95% CI Upper"
+  )
+
+# Display the table
+cor_test_results_table
+
+
+
+```
+
+```r
+
+# Calculate Averages for Each Period
+visualization_data_avg <- ASISA_rollret %>%
+  group_by(date) %>%
+  summarize(
+    AvgRollRets = mean(RollRets, na.rm = TRUE),
+    AvgFlowsIn6Months = mean(Flows_in_6_months, na.rm = TRUE)
+  ) %>%
+  ungroup()
+
+
+
+# Calculate the correlation for the title
+correlation_coefficient <- with(visualization_data_avg, cor(AvgRollRets, AvgFlowsIn6Months, use = "complete.obs"))
+
+# Generate the scatter plot with averages
+visualization_data_avg %>% 
+    mutate(AvgFlowsIn6Months = AvgFlowsIn6Months/1000000) %>% 
+ggplot(aes(x = AvgRollRets, y = AvgFlowsIn6Months)) +
+  geom_point(alpha = 0.6, color = "#1F6F70") + 
+  geom_smooth(method = "lm", color = "#1F6F70", se = FALSE) +  # Add a linear trend line
+  th +
+  labs(title = paste("Average 3-Year Rolling Returns vs. Average Flows in\n6 Months - Correlation:", round(correlation_coefficient, 3)),
+       x = "Average 3-Year Rolling Returns",
+       y = "Average Fund Flows in 6 Months (millions)") +
+  theme(legend.position = "none")  # Remove the legend to avoid clutter
+
+
+```
 
 ### Some pitfalls along the way:
+
+- Overplotting in Visualizations:
+  - Issue: Initial plots were cluttered due to overplotting, making it difficult to discern patterns.
+  - Solution: Implemented the use of average values and trend lines to reduce visual noise and clarify trends.
 
 ---
 
