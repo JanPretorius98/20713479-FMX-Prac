@@ -117,8 +117,6 @@ This folder houses external scripts that enhance functionality.
 
 ### `WRITE-UPS`:
 Stores all write-ups and documentation for questions.
-  - `Basic-Question-Template`: A folder housing the template for basic questions.
-  - `Presentation-Question-Template`: A folder housing template for presentations.
   - `Question-#`: Write-up and code for Questions
 
 ### `MISC`:
