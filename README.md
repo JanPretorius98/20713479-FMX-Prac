@@ -1257,7 +1257,7 @@ This question is stored in `WRITE-UPS`->`Question-5`. The following section expl
   - Calculated rolling volatility over a 30-day window to capture changes over time.
 
 - **GARCH(1,1) Model for Conditional Volatilities:**
-  - Applied a GARCH(1,1) model to estimate conditional volatilities for each currency, including ZAR.
+  - Applied a GARCH(1,1) model to estimate conditional volatilities for each currency, including ZAR, using a custom function.
   - Plotted the results to visualize volatility evolution over time.
 
 - **GO-GARCH Model for Time-Varying Correlations:**
