@@ -31,7 +31,7 @@ Documentation for questions will follow this general format:
 ---
 ##  Installation
 
-The project makes use of the following packages, which can be loaded with the external script `libraries.R` (see UTILITIES below):
+The project makes use of the following packages, which can be loaded (save for `rugarch` & `rmgarch `with the external script `libraries.R` (see UTILITIES below):
 
 - `dplyr`
 - `ggplot2`
@@ -55,6 +55,7 @@ The project makes use of the following packages, which can be loaded with the ex
 - `reshape2`
 - `GGally`
 - `rmgarch`
+- `rugarch`
 
 These libraries are loaded using the pacman package, which offers a more convenient way to load R packages, installing them if necessary. Ensure that pacman is installed on your machine by running the following code in R:
 
