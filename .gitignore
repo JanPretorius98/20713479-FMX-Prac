@@ -49,3 +49,8 @@ po/*~
 rsconnect/
 .DS_Store
 DATA/currencies.rds
+DATA/AI_Max_Fund.rds
+.DS_Store
+*.rds
+*.txt
+*.JPG
